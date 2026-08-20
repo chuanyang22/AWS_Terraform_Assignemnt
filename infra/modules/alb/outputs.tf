@@ -1,5 +1,4 @@
 output "alb_dns_name" {
-  description = "This is the ONLY URL you should use to access the website."
   value       = aws_lb.this.dns_name
 }
 

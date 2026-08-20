@@ -19,7 +19,6 @@ variable "alb_sg_id" {
 variable "app_port" {
   description = "Port the app listens on inside each EC2 instance."
   type        = number
-  default     = 80
 }
 
 variable "health_check_path" {

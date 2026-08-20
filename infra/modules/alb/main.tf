@@ -12,7 +12,7 @@ resource "aws_lb" "this" {
 
 resource "aws_lb_target_group" "app" {
   name        = "${var.name_prefix}-tg"
-  port        = var.app_port
+  port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "instance"
@@ -20,14 +20,12 @@ resource "aws_lb_target_group" "app" {
   health_check {
     path                = var.health_check_path
     protocol            = "HTTP"
-    matcher             = "200"
-    interval            = 15
+    matcher             = "200-399"
+    interval            = 30
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 3
   }
-
-  deregistration_delay = 30
 
   tags = {
     Name = "${var.name_prefix}-tg"

@@ -23,12 +23,12 @@ variable "azs" {
 
 variable "public_subnet_cidrs" {
   type    = list(string)
-  default = ["172.168.1.0/16", "172.168.2.0/16"]
+  default = ["172.168.1.0/24", "172.168.2.0/24"]
 }
 
 variable "private_subnet_cidrs" {
   type    = list(string)
-  default = ["172.168.10.0/16", "172.168.11.0/16"]
+  default = ["172.168.10.0/24", "172.168.11.0/24"]
 }
 
 variable "instance_type" {

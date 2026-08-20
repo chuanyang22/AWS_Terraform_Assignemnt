@@ -1,2 +1,2 @@
 aws_region  = "us-east-1"
-name_prefix = "assignment"
+name_prefix = "sport-facility-bookings"
