@@ -1,1 +1,0 @@
-name_prefix = "sport-facility-bookings"
