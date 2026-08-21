@@ -17,7 +17,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  APP_DIR: event-ticketing
+  APP_DIR: src
   ARTIFACT_PREFIX: artifacts
   ARTIFACT_NAME: sport-facility-bookings-app.zip
   APP_TAG: sport-facility-bookings-event-ticketing
