@@ -5,7 +5,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  APP_TAG: sport-facility-booking
+  APP_TAG: sport-facility-bookings-event-ticketing
   SCHEMA_KEY: db-init/schema.sql
   SCRIPT_KEY: db-init/seed-db.sh
 
@@ -42,9 +42,9 @@ jobs:
 
       - name: Upload schema.sql, seed script, and sample images to S3
         run: |
-          aws s3 cp sport-facility-booking/schema.sql "s3://${{ env.SCHEMA_BUCKET }}/${{ env.SCHEMA_KEY }}"
+          aws s3 cp src/schema.sql "s3://${{ env.SCHEMA_BUCKET }}/${{ env.SCHEMA_KEY }}"
           aws s3 cp infra/script/seed-db.sh "s3://${{ env.SCHEMA_BUCKET }}/${{ env.SCRIPT_KEY }}"
-          aws s3 sync sport-facility-booking/uploads/ "s3://${{ env.SCHEMA_BUCKET }}/uploads/" \
+          aws s3 sync src/uploads/ "s3://${{ env.SCHEMA_BUCKET }}/uploads/" \
             --exclude "index.html"
 
       - name: Run seed script on a running app instance via SSM
