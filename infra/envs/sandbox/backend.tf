@@ -10,7 +10,7 @@ terraform {
     bucket         = "sport-facility-bookings-tfstate-669210057138" //--- REPLACE WITH YOUR OWN UNIQUE BUCKET NAME ---
     key            = "prod/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "sport-facility-bookings-tf-lock"
+    use_lockfile = true
     encrypt        = true
   }
 }
