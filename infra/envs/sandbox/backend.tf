@@ -7,10 +7,10 @@
 # account ID or a random suffix) and create that exact bucket first.
 terraform {
   backend "s3" {
-    bucket       = "sport-facility-bookings-tfstate-669210057138"
-    key          = "prod/terraform.tfstate"
-    region       = "us-east-1"
+    bucket         = "sport-facility-bookings-tfstate-669210057138"
+    key            = "prod/terraform.tfstate"
+    region         = "us-east-1"
     dynamodb_table = "sport-facility-bookings-tf-lock"
-    encrypt      = true
+    encrypt        = true
   }
 }
