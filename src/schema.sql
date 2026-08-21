@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS sports_booking_db;
-USE sports_booking_db;
+CREATE DATABASE IF NOT EXISTS sport_facility_bookings_db;
+USE sport_facility_bookings_db;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,

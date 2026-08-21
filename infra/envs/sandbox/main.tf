@@ -29,10 +29,9 @@ module "security_groups" {
 }
 
 module "s3" {
-  source = "../../modules/s3"
-
-  name_prefix         = var.name_prefix
-  public_read_prefix  = "${var.s3_bucket_name}-${data.aws_caller_identity.current.account_id}"
+  source             = "../../modules/s3"
+  name_prefix        = "${var.name_prefix}-${data.aws_caller_identity.current.account_id}"
+  public_read_prefix = "uploads/*"
 }
 
 module "rds" {
@@ -85,4 +84,14 @@ module "asg" {
   desired_capacity      = var.asg_desired_capacity
   artifact_bucket       = module.s3.bucket_id
   artifact_key          = var.artifact_key
+}
+
+module "cloudwatch_sns" {
+  source                   = "../../modules/cloudwatch-sns"
+  name_prefix              = var.name_prefix
+  asg_name                 = module.asg.asg_name
+  alb_arn_suffix           = module.alb.alb_arn_suffix
+  target_group_arn_suffix  = module.alb.target_group_arn_suffix
+  db_identifier            = module.rds.db_identifier
+  alert_email              = var.alert_email
 }
