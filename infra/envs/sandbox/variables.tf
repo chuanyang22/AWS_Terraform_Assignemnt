@@ -12,7 +12,7 @@ variable "name_prefix" {
 
 variable "vpc_cidr" {
   type    = string
-  default = "172.168.0.0/24"
+  default = "172.168.0.0/16"
 }
 
 variable "azs" {
