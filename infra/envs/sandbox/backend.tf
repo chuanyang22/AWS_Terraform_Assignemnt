@@ -7,10 +7,10 @@
 # account ID or a random suffix) and create that exact bucket first.
 terraform {
   backend "s3" {
-    bucket         = "sport-facility-bookings-tfstate-669210057138"
-    key            = "prod/terraform.tfstate"
-    region         = "us-east-1"
-    use_lockfile   = true
-    encrypt        = true
+    bucket       = "sport-facility-bookings-tfstate-669210057138"
+    key          = "prod/terraform.tfstate"
+    region       = "us-east-1"
+    use_lockfile = true
+    encrypt      = true
   }
 }

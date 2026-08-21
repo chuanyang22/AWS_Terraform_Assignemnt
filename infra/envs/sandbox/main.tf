@@ -87,11 +87,11 @@ module "asg" {
 }
 
 module "cloudwatch_sns" {
-  source                   = "../../modules/cloudwatch-sns"
-  name_prefix              = var.name_prefix
-  asg_name                 = module.asg.asg_name
-  alb_arn_suffix           = module.alb.alb_arn_suffix
-  target_group_arn_suffix  = module.alb.target_group_arn_suffix
-  db_identifier            = module.rds.db_identifier
-  alert_email              = var.alert_email
+  source                  = "../../modules/cloudwatch-sns"
+  name_prefix             = var.name_prefix
+  asg_name                = module.asg.asg_name
+  alb_arn_suffix          = module.alb.alb_arn_suffix
+  target_group_arn_suffix = module.alb.target_group_arn_suffix
+  db_identifier           = module.rds.db_identifier
+  alert_email             = var.alert_email
 }
