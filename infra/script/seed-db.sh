@@ -1,4 +1,4 @@
-#!/bin/bash
+# !/bin/bash
 # Runs on an app instance via SSM Run Command (see .github/workflows/db-init.yml).
 # Idempotent: skips the import if event_ticketing_db.users already exists, so
 # accidentally re-running the workflow later is a safe no-op instead of
@@ -26,7 +26,7 @@ if [ "$ALREADY_SEEDED" -gt 0 ]; then
     # Fix image paths even if already seeded, in case we're rerunning to fix them
     S3_PREFIX="https://${BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/uploads/"
     mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "sport_facility_bookings_db" -e \
-      "UPDATE events SET image_url = REPLACE(image_url, '/uploads/', '${S3_PREFIX}') WHERE image_url LIKE '/uploads/%';"
+      "UPDATE facilities SET image_url = REPLACE(image_url, '/uploads/', '${S3_PREFIX}') WHERE image_url LIKE '/uploads/%';"
     echo "Updated sample image URLs to S3."
   fi
   exit 0
