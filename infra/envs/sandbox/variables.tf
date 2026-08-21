@@ -12,7 +12,7 @@ variable "name_prefix" {
 
 variable "vpc_cidr" {
   type    = string
-  default = "172.168.0.0/16"
+  default = "172.168.0.0/24"
 }
 
 variable "azs" {
@@ -77,17 +77,17 @@ variable "health_check_path" {
 
 variable "asg_min_size" {
   type    = number
-  default = 3
+  default = 1
 }
 
 variable "asg_max_size" {
   type    = number
-  default = 5
+  default = 1
 }
 
 variable "asg_desired_capacity" {
   type    = number
-  default = 3
+  default = 1
 }
 
 variable "alert_email" {
