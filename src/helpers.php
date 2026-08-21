@@ -1,4 +1,6 @@
 <?php
+use Aws\S3\S3Client;
+use Aws\Exception\AwsException;
 // TAR UMT's faculties and centres, used to populate the Faculty dropdown on
 // registration and the account page instead of a free-text field.
 function tarumt_faculties() {
@@ -258,36 +260,23 @@ function s3_role_credentials() {
 // Uploads $data to S3 under $key. Returns [publicUrl, error], matching the
 // shape handle_facility_image_upload()'s callers already expect.
 function s3_put_object($key, $data, $contentType) {
-    $credentials = s3_instance_credentials();
-    if (!$credentials) {
-        return [null, 'Could not get S3 credentials: no IAM role is attached to this instance, and '
-            . 'AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY are not set either. See config.php.'];
+    // The SDK automatically pulls credentials from the EC2 IAM role!
+    $s3 = new S3Client([
+        'region'  => AWS_S3_REGION,
+        'version' => 'latest'
+    ]);
+
+    try {
+        $result = $s3->putObject([
+            'Bucket'      => AWS_S3_BUCKET,
+            'Key'         => $key,
+            'Body'        => $data,
+            'ContentType' => $contentType
+        ]);
+        return [$result['get']('ObjectURL'), null];
+    } catch (AwsException $e) {
+        return [null, "S3 upload failed: " . $e->getAwsErrorMessage()];
     }
-
-    [$host, $headers] = s3_sign('PUT', AWS_S3_BUCKET, AWS_S3_REGION, $key, $data, $credentials);
-    $headers['Content-Type'] = $contentType;
-
-    $headerLines = '';
-    foreach ($headers as $name => $value) {
-        $headerLines .= "$name: $value\r\n";
-    }
-
-    $context = stream_context_create(['http' => [
-        'method' => 'PUT',
-        'header' => $headerLines,
-        'content' => $data,
-        'timeout' => 20,
-        'ignore_errors' => true,
-    ]]);
-
-    @file_get_contents("https://$host/$key", false, $context);
-    $status = s3_response_status($http_response_header ?? []);
-
-    if ($status !== 200) {
-        return [null, "S3 upload failed (HTTP $status)."];
-    }
-
-    return ["https://$host/$key", null];
 }
 
 // Deletes an object previously uploaded to S3, given the URL stored in

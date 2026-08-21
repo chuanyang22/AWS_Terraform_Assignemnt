@@ -2,7 +2,9 @@
 set -euxo pipefail
 
 dnf update -y
-dnf install -y httpd php php-mysqlnd php-cli jq unzip mariadb105
+dnf install -y httpd php php-mysqlnd php-cli php-xml php-mbstring jq unzip mariadb105
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
 
 # Pull DB connection details from Secrets Manager (assignment-db-credentials)
 # using this instance's IAM role - no credentials are ever hardcoded here.
@@ -36,6 +38,8 @@ if aws s3api head-object --bucket "${artifact_bucket}" --key "${artifact_key}" -
   aws s3 cp "s3://${artifact_bucket}/${artifact_key}" /tmp/assignment-app.zip --region "${aws_region}"
   rm -rf /var/www/html/*
   unzip -o /tmp/assignment-app.zip -d /var/www/html
+  cd /var/www/html
+  composer install --no-dev
 else
   echo "<?php http_response_code(200); echo 'assignment-sport-facility-bookings: bootstrapped, waiting for first deploy.';" \
     > /var/www/html/index.php
