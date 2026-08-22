@@ -17,25 +17,25 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  TF_WORKING_DIR: infra/envs/sandbox
   APP_DIR: src
   ARTIFACT_PREFIX: artifacts
   ARTIFACT_NAME: sport-facility-bookings-app.zip
   APP_TAG: sport-facility-bookings
+  ARTIFACT_BUCKET: "" # Populated dynamically from terraform output
+  ASG_NAME: ""        # Populated dynamically from terraform output
 
 permissions:
   contents: read
 
-jobs:
-  infra:
-    name: Apply infrastructure (prerequisite for app deploy)
-    uses: ./.github/workflows/build.yml
-    with:
-      action: apply
-    secrets: inherit
+# Prevent concurrent state lock conflicts in S3/DynamoDB
+concurrency:
+  group: terraform-sandbox-${{ github.ref }}
+  cancel-in-progress: false
 
-  app:
+jobs:
+  deploy:
     name: Build & deploy app to ASG instances
-    needs: infra
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -50,6 +50,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+          terraform_wrapper: false
+
+      - name: Terraform apply & capture outputs
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          terraform init -input=false
+          terraform apply -auto-approve
+          echo "ARTIFACT_BUCKET=$(terraform output -raw s3_bucket_name)" >> "$GITHUB_ENV"
+          echo "ASG_NAME=$(terraform output -raw asg_name)" >> "$GITHUB_ENV"
 
       - name: Setup PHP + Composer
         uses: shivammathur/setup-php@v2
