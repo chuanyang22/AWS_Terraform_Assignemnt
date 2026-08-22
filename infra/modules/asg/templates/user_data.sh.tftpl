@@ -30,23 +30,23 @@ EOF
 mkdir -p /etc/php-fpm.d
 cat <<EOF > /etc/php-fpm.d/app-env.conf
 [www]
-env[DB_HOST] = "$DB_HOST"
-env[DB_USER] = "$DB_USER"
-env[DB_PASS] = "$DB_PASS"
-env[DB_NAME] = "$DB_NAME"
-env[AWS_S3_BUCKET] = "${artifact_bucket}"
-env[AWS_S3_REGION] = "${aws_region}"
+env[DB_HOST] = $DB_HOST
+env[DB_USER] = $DB_USER
+env[DB_PASS] = $DB_PASS
+env[DB_NAME] = $DB_NAME
+env[AWS_S3_BUCKET] = ${artifact_bucket}
+env[AWS_S3_REGION] = ${aws_region}
 EOF
 
 mkdir -p /var/www/html
 
 cat <<EOF > /var/www/html/.env
-DB_HOST="$DB_HOST"
-DB_USER="$DB_USER"
-DB_PASS="$DB_PASS"
-DB_NAME="$DB_NAME"
-AWS_S3_BUCKET="${artifact_bucket}"
-AWS_S3_REGION="${aws_region}"
+DB_HOST=$DB_HOST
+DB_USER=$DB_USER
+DB_PASS=$DB_PASS
+DB_NAME=$DB_NAME
+AWS_S3_BUCKET=${artifact_bucket}
+AWS_S3_REGION=${aws_region}
 EOF
 
 # Self-healing deploy: every new/replaced instance (scale-out, instance
@@ -54,18 +54,19 @@ EOF
 # shipped by the deploy.yml workflow, so the fleet never drifts back to the
 # placeholder page after the first real deploy. Falls back to a placeholder
 # only before any deploy has ever run.
-if aws s3api head-object --bucket "${artifact_bucket}" --key "${artifact_key}" --region "${aws_region}" >/dev/null 2>&1; then
+if aws s3api head-object --bucket "${artifact_bucket}" --key "${artifact_key}" --region "${aws_region}" > /dev/null 2>&1; then
   aws s3 cp "s3://${artifact_bucket}/${artifact_key}" /tmp/assignment-app.zip --region "${aws_region}"
   rm -rf /var/www/html/*
   unzip -o /tmp/assignment-app.zip -d /var/www/html
-  cat <<EOF > /var/www/html/.env
-DB_HOST="$DB_HOST"
-DB_USER="$DB_USER"
-DB_PASS="$DB_PASS"
-DB_NAME="$DB_NAME"
-AWS_S3_BUCKET="${artifact_bucket}"
-AWS_S3_REGION="${aws_region}"
-EOF
+  # Recreate .env after unzip (unzip wipes the dir first)
+  cat <<ENVEOF > /var/www/html/.env
+DB_HOST=$DB_HOST
+DB_USER=$DB_USER
+DB_PASS=$DB_PASS
+DB_NAME=$DB_NAME
+AWS_S3_BUCKET=${artifact_bucket}
+AWS_S3_REGION=${aws_region}
+ENVEOF
   cd /var/www/html
   composer install --no-dev
 else
@@ -80,4 +81,4 @@ fi
 systemctl enable php-fpm || true
 systemctl restart php-fpm || true
 systemctl enable httpd
-systemctl restart httpd
+systemctl restart httpd
