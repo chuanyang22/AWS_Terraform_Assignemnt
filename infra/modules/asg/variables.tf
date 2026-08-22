@@ -9,8 +9,8 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "private_subnet_ids" {
-  description = "Private subnet IDs the ASG launches instances into."
+variable "subnet_ids" {
+  description = "Subnet IDs the ASG launches instances into (public subnets for public IP access)."
   type        = list(string)
 }
 

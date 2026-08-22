@@ -1,32 +1,32 @@
 variable "name_prefix" {
-    type = string
-    default = "assignment"
+  type    = string
+  default = "assignment"
 }
 
 
-variable "secret_name"{
-    type = string
-    default = "assignment-db-credentials"
+variable "secret_name" {
+  type    = string
+  default = "assignment-db-credentials"
 }
 
 variable "db_host" {
-    type = string
+  type = string
 }
 
-variable "db_port"{
-    type = number
-    default = 3306
+variable "db_port" {
+  type    = number
+  default = 3306
 }
 
 variable "db_name" {
-    type = string
+  type = string
 }
 
 variable "db_username" {
-    type = string
+  type = string
 }
 
 variable "db_password" {
-    type = string
-    sensitive  = true
+  type      = string
+  sensitive = true
 }

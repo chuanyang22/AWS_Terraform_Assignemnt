@@ -43,7 +43,7 @@ resource "aws_launch_template" "app" {
     resource_type = "instance"
     tags = {
       Name = "${var.name_prefix}-ec2"
-      App  = "${var.name_prefix}-event-ticketing"
+      App  = "${var.name_prefix}-sport-facility-bookings"
     }
   }
 
@@ -55,20 +55,20 @@ resource "aws_launch_template" "app" {
 resource "aws_autoscaling_group" "app" {
   name = "${var.name_prefix}-asg"
 
-  vpc_zone_identifier = var.private_subnet_ids
-  min_size = var.min_size
-  max_size = var.max_size
-  desired_capacity = var.desired_capacity
-  health_check_type = "ELB"
+  vpc_zone_identifier = var.subnet_ids
+  min_size            = var.min_size
+  max_size            = var.max_size
+  desired_capacity    = var.desired_capacity
+  health_check_type   = "ELB"
   # Generous grace period: on a t3.micro, user-data runs dnf update + installs
   # httpd/php/mariadb and pulls the app artifact from S3 before Apache serves
   # healthz.php - a shorter window risks the ASG killing the instance mid-boot
   # and looping. 300s comfortably covers a cold boot.
   health_check_grace_period = 300
-  target_group_arns = [var.target_group_arn]
+  target_group_arns         = [var.target_group_arn]
 
   launch_template {
-    id = aws_launch_template.app.id
+    id      = aws_launch_template.app.id
     version = "$Latest"
   }
 
@@ -80,23 +80,23 @@ resource "aws_autoscaling_group" "app" {
   }
 
   tag {
-    key = "Name"
-    value = "${var.name_prefix}-asg-instance"
+    key                 = "Name"
+    value               = "${var.name_prefix}-asg-instance"
     propagate_at_launch = true
   }
 
   # Used by the CD workflow to target instances via SSM Run Command.
   tag {
-    key = "App"
-    value = "${var.name_prefix}-event-ticketing"
+    key                 = "App"
+    value               = "${var.name_prefix}-event-ticketing"
     propagate_at_launch = true
   }
 }
 
 resource "aws_autoscaling_policy" "cpu_target_tracking" {
-  name = "${var.name_prefix}-asg-cpu-scaling"
+  name                   = "${var.name_prefix}-asg-cpu-scaling"
   autoscaling_group_name = aws_autoscaling_group.app.name
-  policy_type = "TargetTrackingScaling"
+  policy_type            = "TargetTrackingScaling"
 
   target_tracking_configuration {
     predefined_metric_specification {

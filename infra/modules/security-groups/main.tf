@@ -49,20 +49,20 @@ resource "aws_security_group" "rds" {
 # HTTP only - satisfies "no anywhere-IPv4 for non-HTTP" directly.
 resource "aws_vpc_security_group_ingress_rule" "alb_http_from_internet" {
   security_group_id = aws_security_group.alb.id
-  description        = "HTTP from internet"
-  from_port           = 80
-  to_port             = 80
-  ip_protocol         = "tcp"
-  cidr_ipv4           = "0.0.0.0/0"
+  description       = "HTTP from internet"
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
 }
 
 # Egress restricted to exactly what the ALB needs to forward - not allow-all.
 resource "aws_vpc_security_group_egress_rule" "alb_to_ec2" {
-  security_group_id           = aws_security_group.alb.id
-  description                 = "Forward HTTP to app instances only"
-  from_port                   = 80
-  to_port                     = 80
-  ip_protocol                 = "tcp"
+  security_group_id            = aws_security_group.alb.id
+  description                  = "Forward HTTP to app instances only"
+  from_port                    = 80
+  to_port                      = 80
+  ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.ec2.id
 }
 
@@ -70,13 +70,13 @@ resource "aws_vpc_security_group_egress_rule" "alb_to_ec2" {
 # ec2-sg rules
 # ---------------------------------------------------------------------------
 
-resource "aws_vpc_security_group_ingress_rule" "ec2_http_from_alb" {
-  security_group_id           = aws_security_group.ec2.id
-  description                 = "HTTP from ALB only"
-  from_port                   = 80
-  to_port                     = 80
-  ip_protocol                 = "tcp"
-  referenced_security_group_id = aws_security_group.alb.id
+resource "aws_vpc_security_group_ingress_rule" "ec2_http_from_internet" {
+  security_group_id = aws_security_group.ec2.id
+  description       = "HTTP from internet and ALB"
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
 }
 
 # Fallback shell access - scoped to the VPC CIDR, never the internet.
@@ -84,41 +84,41 @@ resource "aws_vpc_security_group_ingress_rule" "ec2_http_from_alb" {
 # regardless; SSM Session Manager remains the primary access path.
 resource "aws_vpc_security_group_ingress_rule" "ec2_ssh_from_vpc" {
   security_group_id = aws_security_group.ec2.id
-  description        = "SSH from within the VPC only (SSM Session Manager is primary access)"
-  from_port           = 22
-  to_port             = 22
-  ip_protocol         = "tcp"
-  cidr_ipv4           = var.vpc_cidr
+  description       = "SSH from within the VPC only (SSM Session Manager is primary access)"
+  from_port         = 22
+  to_port           = 22
+  ip_protocol       = "tcp"
+  cidr_ipv4         = var.vpc_cidr
 }
 
 # HTTPS out - needed for the AWS CLI/SDK calls to Secrets Manager, S3 (for
 # anything not covered by the VPC Gateway Endpoint), SSM, and CloudWatch.
 resource "aws_vpc_security_group_egress_rule" "ec2_https_out" {
   security_group_id = aws_security_group.ec2.id
-  description        = "HTTPS out - AWS API calls (Secrets Manager, SSM, CloudWatch)"
-  from_port           = 443
-  to_port             = 443
-  ip_protocol         = "tcp"
-  cidr_ipv4           = "0.0.0.0/0"
+  description       = "HTTPS out - AWS API calls (Secrets Manager, SSM, CloudWatch)"
+  from_port         = 443
+  to_port           = 443
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
 }
 
 # HTTP out - Amazon Linux package mirrors that aren't S3-backed.
 resource "aws_vpc_security_group_egress_rule" "ec2_http_out" {
   security_group_id = aws_security_group.ec2.id
-  description        = "HTTP out - package updates"
-  from_port           = 80
-  to_port             = 80
-  ip_protocol         = "tcp"
-  cidr_ipv4           = "0.0.0.0/0"
+  description       = "HTTP out - package updates"
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
 }
 
 # DB traffic only to the RDS security group - not allow-all.
 resource "aws_vpc_security_group_egress_rule" "ec2_to_rds" {
-  security_group_id           = aws_security_group.ec2.id
-  description                 = "MySQL/Aurora to RDS only"
-  from_port                   = 3306
-  to_port                     = 3306
-  ip_protocol                 = "tcp"
+  security_group_id            = aws_security_group.ec2.id
+  description                  = "MySQL/Aurora to RDS only"
+  from_port                    = 3306
+  to_port                      = 3306
+  ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.rds.id
 }
 
@@ -127,11 +127,11 @@ resource "aws_vpc_security_group_egress_rule" "ec2_to_rds" {
 # ---------------------------------------------------------------------------
 
 resource "aws_vpc_security_group_ingress_rule" "rds_from_ec2" {
-  security_group_id           = aws_security_group.rds.id
-  description                 = "MySQL/Aurora from EC2 app instances only"
-  from_port                   = 3306
-  to_port                     = 3306
-  ip_protocol                 = "tcp"
+  security_group_id            = aws_security_group.rds.id
+  description                  = "MySQL/Aurora from EC2 app instances only"
+  from_port                    = 3306
+  to_port                      = 3306
+  ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.ec2.id
 }
 
