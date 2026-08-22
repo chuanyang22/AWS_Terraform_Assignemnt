@@ -23,8 +23,10 @@ resource "aws_launch_template" "app" {
   name_prefix   = "${var.name_prefix}-lt-"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = var.instance_type
-
-  vpc_security_group_ids = [var.ec2_sg_id]
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [var.ec2_sg_id]
+  }
 
   iam_instance_profile {
     name = data.aws_iam_instance_profile.lab.name
