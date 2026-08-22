@@ -65,11 +65,32 @@ date_default_timezone_set('Asia/Kuala_Lumpur');
 //   $host = 'your-db-identifier.xxxxxxxxxxxx.us-east-1.rds.amazonaws.com';
 //   $user = 'admin';
 //   $pass = 'your-rds-master-password';
-// ============================================================================
-$host   = getenv('DB_HOST') ?: 'localhost';
-$user   = getenv('DB_USER') ?: 'root';
-$pass   = getenv('DB_PASS') ?: '';
-$dbname = getenv('DB_NAME') ?: 'sports_booking_db';
+/**
+ * @param string $key
+ * @param string $default
+ * @return string
+ */
+function app_env(string $key, string $default = ''): string {
+    if (!empty($_SERVER[$key])) {
+        return (string)$_SERVER[$key];
+    }
+    if (!empty($_ENV[$key])) {
+        return (string)$_ENV[$key];
+    }
+    $val = getenv($key);
+    if ($val !== false && $val !== '') {
+        return (string)$val;
+    }
+    if (!empty($_SERVER['REDIRECT_' . $key])) {
+        return (string)$_SERVER['REDIRECT_' . $key];
+    }
+    return $default;
+}
+
+$host   = app_env('DB_HOST', 'localhost');
+$user   = app_env('DB_USER', 'root');
+$pass   = app_env('DB_PASS', '');
+$dbname = app_env('DB_NAME', 'sport_facility_bookings_db');
 
 // @-suppressed: even with MYSQLI_REPORT_OFF (no exception), a failed
 // connection still emits a PHP-level warning straight into the response
@@ -95,38 +116,8 @@ $conn->query("SET time_zone = '+08:00'");
 // ============================================================================
 // Photo storage (S3) - optional
 // ============================================================================
-// LOCAL / DOCKER (current default below, all blank): uploaded photos are
-// saved to this app's local uploads/ folder, exactly as before. Nothing to
-// configure for local development.
-//
-// Once there's more than one EC2 instance behind an ALB/ASG, local disk
-// uploads only exist on whichever instance handled that request - the next
-// instance (or a newly launched ASG instance) won't have the file, so the
-// image breaks. Uploading to S3 instead fixes this, since every instance
-// reads/writes the same bucket. This is already wired up (see helpers.php)
-// - to turn it on:
-//   1. Create an S3 bucket and a bucket policy allowing public s3:GetObject
-//      on it (or put CloudFront in front of it instead).
-//   2. Set AWS_S3_BUCKET / AWS_S3_REGION in your .env file (copy
-//      .env.example to .env - see the loader at the top of this file).
-//   3. Give this app permission to write to that bucket, either:
-//      a) Attach an IAM role to your EC2 instance/launch template with an
-//         s3:PutObject + s3:DeleteObject permission scoped to the bucket -
-//         credentials are then fetched automatically from the instance's
-//         own metadata service (IMDSv2), nothing to set below. Tried first.
-//      b) On an AWS Academy Learner Lab where you can't attach or inspect
-//         IAM roles yourself, use the temporary Access Key ID / Secret
-//         Access Key / Session Token shown in the lab's "AWS Details"
-//         panel instead - set AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY /
-//         AWS_SESSION_TOKEN in your .env file (never commit real values -
-//         .env is git-ignored, only .env.example is tracked). These expire
-//         and rotate periodically in a Learner Lab; if uploads that were
-//         working suddenly start failing, that's almost always why - grab
-//         fresh values from "AWS Details" and update .env (no restart
-//         needed).
-// ============================================================================
-define('AWS_S3_BUCKET', getenv('AWS_S3_BUCKET') ?: '');
-define('AWS_S3_REGION', getenv('AWS_S3_REGION') ?: 'us-east-1');
-define('AWS_ACCESS_KEY_ID', getenv('AWS_ACCESS_KEY_ID') ?: '');
-define('AWS_SECRET_ACCESS_KEY', getenv('AWS_SECRET_ACCESS_KEY') ?: '');
-define('AWS_SESSION_TOKEN', getenv('AWS_SESSION_TOKEN') ?: '');
+define('AWS_S3_BUCKET', app_env('AWS_S3_BUCKET', ''));
+define('AWS_S3_REGION', app_env('AWS_S3_REGION', 'us-east-1'));
+define('AWS_ACCESS_KEY_ID', app_env('AWS_ACCESS_KEY_ID', ''));
+define('AWS_SECRET_ACCESS_KEY', app_env('AWS_SECRET_ACCESS_KEY', ''));
+define('AWS_SESSION_TOKEN', app_env('AWS_SESSION_TOKEN', ''));

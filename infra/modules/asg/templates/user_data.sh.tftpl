@@ -27,7 +27,27 @@ SetEnv AWS_S3_BUCKET "${artifact_bucket}"
 SetEnv AWS_S3_REGION "${aws_region}"
 EOF
 
+mkdir -p /etc/php-fpm.d
+cat <<EOF > /etc/php-fpm.d/app-env.conf
+[www]
+env[DB_HOST] = "$DB_HOST"
+env[DB_USER] = "$DB_USER"
+env[DB_PASS] = "$DB_PASS"
+env[DB_NAME] = "$DB_NAME"
+env[AWS_S3_BUCKET] = "${artifact_bucket}"
+env[AWS_S3_REGION] = "${aws_region}"
+EOF
+
 mkdir -p /var/www/html
+
+cat <<EOF > /var/www/html/.env
+DB_HOST="$DB_HOST"
+DB_USER="$DB_USER"
+DB_PASS="$DB_PASS"
+DB_NAME="$DB_NAME"
+AWS_S3_BUCKET="${artifact_bucket}"
+AWS_S3_REGION="${aws_region}"
+EOF
 
 # Self-healing deploy: every new/replaced instance (scale-out, instance
 # refresh, terraform apply after a destroy, etc.) pulls whatever was last
@@ -38,6 +58,14 @@ if aws s3api head-object --bucket "${artifact_bucket}" --key "${artifact_key}" -
   aws s3 cp "s3://${artifact_bucket}/${artifact_key}" /tmp/assignment-app.zip --region "${aws_region}"
   rm -rf /var/www/html/*
   unzip -o /tmp/assignment-app.zip -d /var/www/html
+  cat <<EOF > /var/www/html/.env
+DB_HOST="$DB_HOST"
+DB_USER="$DB_USER"
+DB_PASS="$DB_PASS"
+DB_NAME="$DB_NAME"
+AWS_S3_BUCKET="${artifact_bucket}"
+AWS_S3_REGION="${aws_region}"
+EOF
   cd /var/www/html
   composer install --no-dev
 else
@@ -49,5 +77,7 @@ else
     > /var/www/html/healthz.php
 fi
 
+systemctl enable php-fpm || true
+systemctl restart php-fpm || true
 systemctl enable httpd
 systemctl restart httpd
