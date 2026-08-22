@@ -45,7 +45,7 @@ resource "aws_launch_template" "app" {
     resource_type = "instance"
     tags = {
       Name = "${var.name_prefix}-ec2"
-      App  = "${var.name_prefix}-sport-facility-bookings"
+      App  = var.name_prefix
     }
   }
 
@@ -90,7 +90,7 @@ resource "aws_autoscaling_group" "app" {
   # Used by the CD workflow to target instances via SSM Run Command.
   tag {
     key                 = "App"
-    value               = "${var.name_prefix}-event-ticketing"
+    value               = var.name_prefix
     propagate_at_launch = true
   }
 }

@@ -14,7 +14,7 @@ variable "rds_sg_id" {
 
 variable "db_name" {
   type    = string
-  default = "event_ticketing_db"
+  default = "sport_facility_bookings_db"
 }
 
 variable "db_username" {

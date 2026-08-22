@@ -1,6 +1,6 @@
 # !/bin/bash
 # Runs on an app instance via SSM Run Command (see .github/workflows/db-init.yml).
-# Idempotent: skips the import if event_ticketing_db.users already exists, so
+# Idempotent: skips the import if sport_facility_bookings_db.users already exists, so
 # accidentally re-running the workflow later is a safe no-op instead of
 # crashing on duplicate-key errors from schema.sql's seed INSERTs.
 set -euo pipefail
@@ -21,7 +21,7 @@ ALREADY_SEEDED=$(mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -N -e \
   "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='sport_facility_bookings_db' AND table_name='users'")
 
 if [ "$ALREADY_SEEDED" -gt 0 ]; then
-  echo "event_ticketing_db.users already exists - database already seeded, skipping import."
+  echo "sport_facility_bookings_db.users already exists - database already seeded, skipping import."
   if [ -n "$BUCKET_NAME" ]; then
     # Fix image paths even if already seeded, in case we're rerunning to fix them
     S3_PREFIX="https://${BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/uploads/"

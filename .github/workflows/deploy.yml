@@ -20,7 +20,7 @@ env:
   APP_DIR: src
   ARTIFACT_PREFIX: artifacts
   ARTIFACT_NAME: sport-facility-bookings-app.zip
-  APP_TAG: sport-facility-bookings-event-ticketing
+  APP_TAG: sport-facility-bookings
 
 permissions:
   contents: read
