@@ -37,9 +37,6 @@ jobs:
     name: Build & deploy app to ASG instances
     needs: infra
     runs-on: ubuntu-latest
-    env:
-      ARTIFACT_BUCKET: ${{ needs.infra.outputs.s3_bucket }}
-      ASG_NAME: ${{ needs.infra.outputs.asg_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
