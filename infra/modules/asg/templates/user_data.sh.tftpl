@@ -3,8 +3,6 @@ set -euxo pipefail
 
 dnf update -y
 dnf install -y httpd php php-mysqlnd php-cli php-xml php-mbstring jq unzip mariadb105
-curl -sS https://getcomposer.org/installer | php
-mv composer.phar /usr/local/bin/composer
 
 # Pull DB connection details from Secrets Manager (assignment-db-credentials)
 # using this instance's IAM role - no credentials are ever hardcoded here.
@@ -67,8 +65,7 @@ DB_NAME=$DB_NAME
 AWS_S3_BUCKET=${artifact_bucket}
 AWS_S3_REGION=${aws_region}
 ENVEOF
-  cd /var/www/html
-  composer install --no-dev
+  chown -R apache:apache /var/www/html
 else
   echo "<?php http_response_code(200); echo 'assignment-sport-facility-bookings: bootstrapped, waiting for first deploy.';" \
     > /var/www/html/index.php
