@@ -25,3 +25,9 @@ variable "app_port" {
   type    = number
   default = 80
 }
+
+variable "app_port" {
+  description = "The port the application listens on"
+  type        = number
+  default     = 80
+}
