@@ -21,3 +21,7 @@ variable "health_check_path" {
   type    = string
   default = "/healthz.php"
 }
+variable "app_port" {
+  type    = number
+  default = 80
+}
