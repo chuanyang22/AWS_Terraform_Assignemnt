@@ -99,7 +99,7 @@ $dbname = app_env('DB_NAME', 'sport_facility_bookings_db');
 // 200 status - making the http_response_code(500) call too late to matter.
 // Suppressing it here keeps the failure check as the single source of truth
 // for what gets reported.
-die("DEBUG: host=" . $host);
+
 $conn = @new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {
     // Signal unhealthy to an ALB health check (or anything else probing this
