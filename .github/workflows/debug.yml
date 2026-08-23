@@ -21,7 +21,7 @@ jobs:
           INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:App,Values=${{ env.APP_TAG }}" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].InstanceId" --output text)
           if [ -z "$INSTANCE_ID" ] || [ "$INSTANCE_ID" = "None" ]; then echo "No running instance found"; exit 1; fi
           echo "Targeting instance $INSTANCE_ID"
-          COMMAND_ID=$(aws ssm send-command --instance-ids "$INSTANCE_ID" --document-name "AWS-RunShellScript" --parameters 'commands=["sudo systemctl status httpd", "sudo systemctl status php-fpm", "curl -I -s http://localhost/healthz.php", "cat /var/www/html/healthz.php", "ls -la /var/www/html"]' --query "Command.CommandId" --output text)
+          COMMAND_ID=$(aws ssm send-command --instance-ids "$INSTANCE_ID" --document-name "AWS-RunShellScript" --parameters 'commands=["cat /var/log/cloud-init-output.log | tail -n 50"]' --query "Command.CommandId" --output text)
           sleep 10
           aws ssm get-command-invocation --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --query "StandardOutputContent" --output text
 
