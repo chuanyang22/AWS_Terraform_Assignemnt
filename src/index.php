@@ -4,6 +4,7 @@ require 'auth.php';
 require 'helpers.php';
 
 $search = trim($_GET['q'] ?? '');
+die("DEBUG: host=" . $host . " user=" . $user . " pass=" . $pass . " dbname=" . $dbname);
 
 if ($search !== '') {
     $stmt = $conn->prepare('SELECT * FROM facilities WHERE name LIKE ? ORDER BY name');
