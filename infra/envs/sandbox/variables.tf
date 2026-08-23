@@ -12,7 +12,7 @@ variable "name_prefix" {
 
 variable "vpc_cidr" {
   type    = string
-  default = "172.168.0.0/16"
+  default = "172.16.0.0/16"
 }
 
 variable "azs" {
@@ -23,12 +23,12 @@ variable "azs" {
 
 variable "public_subnet_cidrs" {
   type    = list(string)
-  default = ["172.168.1.0/24", "172.168.2.0/24"]
+  default = ["172.16.1.0/24", "172.16.2.0/24"]
 }
 
 variable "private_subnet_cidrs" {
   type    = list(string)
-  default = ["172.168.10.0/24", "172.168.11.0/24"]
+  default = ["172.16.10.0/24", "172.16.11.0/24"]
 }
 
 variable "instance_type" {
@@ -82,7 +82,7 @@ variable "asg_min_size" {
 
 variable "asg_max_size" {
   type    = number
-  default = 1
+  default = 3
 }
 
 variable "asg_desired_capacity" {

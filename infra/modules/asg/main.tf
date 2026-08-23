@@ -24,7 +24,7 @@ resource "aws_launch_template" "app" {
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = var.instance_type
   network_interfaces {
-    associate_public_ip_address = true
+    associate_public_ip_address = false
     security_groups             = [var.ec2_sg_id]
   }
 

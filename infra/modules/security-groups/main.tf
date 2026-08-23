@@ -70,13 +70,13 @@ resource "aws_vpc_security_group_egress_rule" "alb_to_ec2" {
 # ec2-sg rules
 # ---------------------------------------------------------------------------
 
-resource "aws_vpc_security_group_ingress_rule" "ec2_http_from_internet" {
-  security_group_id = aws_security_group.ec2.id
-  description       = "HTTP from internet and ALB"
-  from_port         = 80
-  to_port           = 80
-  ip_protocol       = "tcp"
-  cidr_ipv4         = "0.0.0.0/0"
+resource "aws_vpc_security_group_ingress_rule" "ec2_http_from_alb" {
+  security_group_id            = aws_security_group.ec2.id
+  description                  = "HTTP from ALB only"
+  from_port                    = 80
+  to_port                      = 80
+  ip_protocol                  = "tcp"
+  referenced_security_group_id = aws_security_group.alb.id
 }
 
 # Fallback shell access - scoped to the VPC CIDR, never the internet.
