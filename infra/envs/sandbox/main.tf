@@ -64,7 +64,6 @@ module "alb" {
   public_subnet_ids = module.vpc.public_subnet_ids
   alb_sg_id         = module.security_groups.alb_sg_id
   health_check_path = var.health_check_path
-  app_port          = 80
 }
 
 module "asg" {
