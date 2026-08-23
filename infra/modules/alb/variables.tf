@@ -16,10 +16,6 @@ variable "alb_sg_id" {
   type = string
 }
 
-variable "app_port" {
-  description = "Port the app listens on inside each EC2 instance."
-  type        = number
-}
 
 variable "health_check_path" {
   type    = string
