@@ -25,9 +25,16 @@ SetEnv AWS_S3_BUCKET "${artifact_bucket}"
 SetEnv AWS_S3_REGION "${aws_region}"
 EOF
 
-mkdir -p /etc/php-fpm.d
-cat <<EOF > /etc/php-fpm.d/app-env.conf
-[www]
+# IMPORTANT: do NOT create a second file with its own "[www]" section here.
+# php-fpm's default package config already defines a pool named "www" in
+# /etc/php-fpm.d/www.conf. Two files both declaring "[www]" is a fatal
+# config error - php-fpm refuses to start, Apache is left with nothing on
+# the other end of the fastcgi socket, and every PHP request then fails at
+# the ALB as a 502 Bad Gateway (the target accepts the TCP connection but
+# never returns a valid response). Appending plain "env[...]" lines to the
+# END of the existing www.conf adds them to that same pool instead of
+# declaring a duplicate one.
+cat <<EOF >> /etc/php-fpm.d/www.conf
 env[DB_HOST] = $DB_HOST
 env[DB_USER] = $DB_USER
 env[DB_PASS] = $DB_PASS
@@ -78,4 +85,4 @@ fi
 systemctl enable php-fpm || true
 systemctl restart php-fpm || true
 systemctl enable httpd
-systemctl restart httpd
+systemctl restart httpd
