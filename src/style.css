@@ -1121,3 +1121,9 @@ a { color: var(--accent); }
 }
 
 .form-hint { color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; }
+
+ / *   G o o g l e   T r a n s l a t e   o v e r r i d e s   * / 
+ b o d y   {   t o p :   0   ! i m p o r t a n t ;   } 
+ . g o o g - t e - b a n n e r - f r a m e   {   d i s p l a y :   n o n e   ! i m p o r t a n t ;   } 
+  
+ 

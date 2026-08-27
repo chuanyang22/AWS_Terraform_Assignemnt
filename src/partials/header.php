@@ -48,6 +48,7 @@ function nav_active($page, $current) {
 <a href="register.php">Register</a>
 <?php endif; ?>
 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">&#9728;</button>
+<div id="google_translate_element" style="display:inline-block; margin-left: 15px; vertical-align: middle;"></div>
 </div>
 </nav>
 <main class="container">
