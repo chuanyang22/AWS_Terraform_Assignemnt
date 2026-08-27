@@ -1,6 +1,11 @@
 name: CD - Deploy Application
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
   workflow_dispatch:
     inputs:
       ref:
@@ -41,7 +46,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
