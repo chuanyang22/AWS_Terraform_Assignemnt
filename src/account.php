@@ -2,6 +2,9 @@
 require 'config.php';
 require 'auth.php';
 require 'helpers.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require 'vendor/autoload.php';
 use Google\Authenticator\GoogleAuthenticator;
 use chillerlan\QRCode\QRCode;
@@ -188,3 +191,4 @@ require 'partials/header.php';
 </form>
 </div>
 <?php require 'partials/footer.php'; ?>
+
