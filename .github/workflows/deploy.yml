@@ -157,6 +157,7 @@ jobs:
             --comment "${{ env.APP_TAG }} deploy" \
             --parameters '{"commands":[
               "cloud-init status --wait",
+              "sudo dnf install -y php-gd",
               "aws s3 cp s3://${{ env.ARTIFACT_BUCKET }}/${{ env.ARTIFACT_PREFIX }}/${{ env.ARTIFACT_NAME }} /tmp/app-deploy.zip",
               "sudo rm -rf /var/www/html/*",
               "sudo unzip -o /tmp/app-deploy.zip -d /var/www/html",

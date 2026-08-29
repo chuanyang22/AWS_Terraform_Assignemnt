@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 dnf update -y
-dnf install -y httpd php php-mysqlnd php-cli php-xml php-mbstring jq unzip mariadb105
+dnf install -y httpd php php-mysqlnd php-cli php-xml php-mbstring php-gd jq unzip mariadb105
 
 # Pull DB connection details from Secrets Manager (assignment-db-credentials)
 # using this instance's IAM role - no credentials are ever hardcoded here.
