@@ -1,4 +1,6 @@
 </main>
+    </div>
+</div>
 <footer class="site-footer">
 <div class="footer-grid">
 <div class="footer-brand">
@@ -124,5 +126,26 @@ function googleTranslateElementInit() {
 }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+(function () {
+    var sidebar = document.getElementById('sidebar');
+    var toggleBtn = document.getElementById('sidebar-toggle');
+    if (!sidebar || !toggleBtn) return;
+
+    var savedState = localStorage.getItem('sidebar_collapsed');
+    if (savedState === 'true' && window.innerWidth > 768) {
+        sidebar.classList.add('collapsed');
+    } else if (window.innerWidth <= 768) {
+        sidebar.classList.add('collapsed');
+    }
+
+    toggleBtn.addEventListener('click', function () {
+        sidebar.classList.toggle('collapsed');
+        var isCollapsed = sidebar.classList.contains('collapsed');
+        localStorage.setItem('sidebar_collapsed', isCollapsed ? 'true' : 'false');
+    });
+})();
+</script>
 </body>
 </html>
+
