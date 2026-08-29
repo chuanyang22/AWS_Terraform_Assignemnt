@@ -2,6 +2,9 @@
 require 'config.php';
 require 'auth.php';
 require 'helpers.php';
+require 'vendor/autoload.php';
+use Google\Authenticator\GoogleAuthenticator;
+use chillerlan\QRCode\QRCode;
 require_login();
 
 $uid = current_user_id();
@@ -9,8 +12,10 @@ $profileError = '';
 $profileSuccess = '';
 $passwordError = '';
 $passwordSuccess = '';
+$twoFaError = '';
+$twoFaSuccess = '';
 
-$stmt = $conn->prepare('SELECT name, email, id_number, faculty, date_of_birth FROM users WHERE id = ?');
+$stmt = $conn->prepare('SELECT name, email, id_number, faculty, date_of_birth, two_factor_enabled, two_factor_secret FROM users WHERE id = ?');
 $stmt->bind_param('i', $uid);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
@@ -36,6 +41,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form'] ?? '') === 'profile
         $user['date_of_birth'] = $date_of_birth;
         $profileSuccess = 'Profile updated.';
     }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form'] ?? '') === '2fa_enable') {
+    $code = $_POST['code'] ?? '';
+    $secret = $_SESSION['pending_2fa_secret'] ?? '';
+    if ($secret && $code) {
+        $g = new GoogleAuthenticator();
+        if ($g->checkCode($secret, $code)) {
+            $stmt = $conn->prepare('UPDATE users SET two_factor_secret = ?, two_factor_enabled = 1 WHERE id = ?');
+            $stmt->bind_param('si', $secret, $uid);
+            $stmt->execute();
+            $stmt->close();
+            $user['two_factor_enabled'] = 1;
+            $twoFaSuccess = 'Two-Factor Authentication has been enabled.';
+            unset($_SESSION['pending_2fa_secret']);
+        } else {
+            $twoFaError = 'Invalid code. Please try again.';
+        }
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form'] ?? '') === '2fa_disable') {
+    $stmt = $conn->prepare('UPDATE users SET two_factor_secret = NULL, two_factor_enabled = 0 WHERE id = ?');
+    $stmt->bind_param('i', $uid);
+    $stmt->execute();
+    $stmt->close();
+    $user['two_factor_enabled'] = 0;
+    $twoFaSuccess = 'Two-Factor Authentication has been disabled.';
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form'] ?? '') === 'password') {
@@ -93,6 +124,40 @@ require 'partials/header.php';
 <label>Date of Birth <span class="required-mark">*</span> <input type="date" name="date_of_birth" value="<?= htmlspecialchars($user['date_of_birth'] ?? '') ?>" required></label>
 <button type="submit">Save Changes</button>
 </form>
+</div>
+
+<div class="form-card" style="margin-bottom:24px;">
+<h2>Security Settings (2FA)</h2>
+<?php if ($twoFaError): ?><p class="alert alert-error"><?= htmlspecialchars($twoFaError) ?></p><?php endif; ?>
+<?php if ($twoFaSuccess): ?><p class="alert alert-success"><?= htmlspecialchars($twoFaSuccess) ?></p><?php endif; ?>
+
+<?php if ($user['two_factor_enabled']): ?>
+    <p>Two-Factor Authentication is currently <strong>ENABLED</strong>.</p>
+    <form method="post">
+        <input type="hidden" name="form" value="2fa_disable">
+        <button type="submit" style="background-color: #dc3545;">Disable 2FA</button>
+    </form>
+<?php else: ?>
+    <p>Two-Factor Authentication is currently <strong>DISABLED</strong>. We recommend enabling it to secure your account.</p>
+    <?php
+    if (!isset($_SESSION['pending_2fa_secret']) || $twoFaSuccess) {
+        $g = new GoogleAuthenticator();
+        $_SESSION['pending_2fa_secret'] = $g->generateSecret();
+    }
+    $secret = $_SESSION['pending_2fa_secret'];
+    $qrCodeUrl = 'otpauth://totp/SportFacilityBookings?secret=' . $secret . '&issuer=SportFacilityBookings';
+    $qrcodeImage = (new QRCode)->render($qrCodeUrl);
+    ?>
+    <p>1. Install Google Authenticator on your phone.</p>
+    <p>2. Scan this QR code:</p>
+    <img src="<?= $qrcodeImage ?>" alt="QR Code" style="margin-bottom:15px; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
+    <p>3. Enter the 6-digit code to confirm:</p>
+    <form method="post">
+        <input type="hidden" name="form" value="2fa_enable">
+        <label>6-Digit Code <input type="text" name="code" required></label>
+        <button type="submit">Enable 2FA</button>
+    </form>
+<?php endif; ?>
 </div>
 
 <div class="form-card">

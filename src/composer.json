@@ -1,6 +1,8 @@
 {
     "require": {
-        "aws/aws-sdk-php": "^3.300"
+        "aws/aws-sdk-php": "^3.300",
+        "sonata-project/google-authenticator": "^2.3",
+        "chillerlan/php-qrcode": "^4.3"
     },
     "config": {
         "optimize-autoloader": true,

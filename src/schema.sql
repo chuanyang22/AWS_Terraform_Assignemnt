@@ -9,6 +9,8 @@ CREATE TABLE users (
   id_number VARCHAR(20) NULL,
   faculty VARCHAR(150) NULL,
   date_of_birth DATE NULL,
+  two_factor_secret VARCHAR(255) NULL,
+  two_factor_enabled TINYINT(1) NOT NULL DEFAULT 0,
   is_admin TINYINT(1) NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

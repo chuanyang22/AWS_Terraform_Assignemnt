@@ -7,13 +7,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare('SELECT id, name, password_hash, is_admin FROM users WHERE email = ?');
+    $stmt = $conn->prepare('SELECT id, name, password_hash, is_admin, two_factor_enabled FROM users WHERE email = ?');
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
     if ($user && password_verify($password, $user['password_hash'])) {
+        if (!empty($user['two_factor_enabled'])) {
+            $_SESSION['pending_2fa_user_id'] = $user['id'];
+            header('Location: login_2fa.php');
+            exit;
+        }
+
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['is_admin'] = (bool)$user['is_admin'];
