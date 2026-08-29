@@ -33,22 +33,22 @@ function nav_active($page, $current) {
         </a>
         <nav class="sidebar-nav">
             <a href="index.php" class="<?= trim(nav_active('index.php', $currentPage)) ?>">
-                <span class="sidebar-icon">??</span><span class="sidebar-text">Home</span>
+                <span class="sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span class="sidebar-text">Home</span>
             </a>
             <a href="facilities.php" class="<?= trim(nav_active('facilities.php', $currentPage)) ?>">
-                <span class="sidebar-icon">???</span><span class="sidebar-text">Facilities</span>
+                <span class="sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></span><span class="sidebar-text">Facilities</span>
             </a>
             <a href="schedule.php" class="<?= trim(nav_active('schedule.php', $currentPage)) ?>">
-                <span class="sidebar-icon">??</span><span class="sidebar-text">Schedule</span>
+                <span class="sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span class="sidebar-text">Schedule</span>
             </a>
             <a href="testimonials.php" class="<?= trim(nav_active('testimonials.php', $currentPage)) ?>">
-                <span class="sidebar-icon">??</span><span class="sidebar-text">Testimonials</span>
+                <span class="sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="sidebar-text">Testimonials</span>
             </a>
             <a href="about.php" class="<?= trim(nav_active('about.php', $currentPage)) ?>">
-                <span class="sidebar-icon">??</span><span class="sidebar-text">About</span>
+                <span class="sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span><span class="sidebar-text">About</span>
             </a>
             <a href="contact.php" class="<?= trim(nav_active('contact.php', $currentPage)) ?>">
-                <span class="sidebar-icon">??</span><span class="sidebar-text">Contact</span>
+                <span class="sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span><span class="sidebar-text">Contact</span>
             </a>
         </nav>
     </aside>
@@ -81,3 +81,4 @@ function nav_active($page, $current) {
             </div>
         </header>
         <main class="container">
+
