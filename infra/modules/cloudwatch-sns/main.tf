@@ -83,31 +83,31 @@ resource "aws_cloudwatch_metric_alarm" "rds_low_storage" {
     DBInstanceIdentifier = var.db_identifier
   }
 }
-resource ""aws_autoscaling_notification"" ""asg_notifications"" {
+resource "aws_autoscaling_notification" "asg_notifications" {
   group_names = [var.asg_name]
 
   notifications = [
-    ""autoscaling:EC2_INSTANCE_LAUNCH"",
-    ""autoscaling:EC2_INSTANCE_TERMINATE"",
-    ""autoscaling:EC2_INSTANCE_LAUNCH_ERROR"",
-    ""autoscaling:EC2_INSTANCE_TERMINATE_ERROR""
+    "autoscaling:EC2_INSTANCE_LAUNCH",
+    "autoscaling:EC2_INSTANCE_TERMINATE",
+    "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+    "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
   ]
 
   topic_arn = aws_sns_topic.alerts.arn
 }
 
-data ""aws_iam_policy_document"" ""sns_topic_policy"" {
+data "aws_iam_policy_document" "sns_topic_policy" {
   statement {
-    actions   = [""sns:Publish""]
+    actions   = ["sns:Publish"]
     resources = [aws_sns_topic.alerts.arn]
     principals {
-      type        = ""Service""
-      identifiers = [""autoscaling.amazonaws.com""]
+      type        = "Service"
+      identifiers = ["autoscaling.amazonaws.com"]
     }
   }
 }
 
-resource ""aws_sns_topic_policy"" ""alerts"" {
+resource "aws_sns_topic_policy" "alerts" {
   arn    = aws_sns_topic.alerts.arn
   policy = data.aws_iam_policy_document.sns_topic_policy.json
 }
