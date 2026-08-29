@@ -17,23 +17,23 @@ DB_PASS=$(echo "$SECRET_JSON" | jq -r .password)
 DB_NAME=$(echo "$SECRET_JSON" | jq -r .dbname)
 
 cat <<EOF >> /etc/php-fpm.d/www.conf
-env[DB_HOST] = $DB_HOST
-env[DB_USER] = $DB_USER
-env[DB_PASS] = $DB_PASS
-env[DB_NAME] = $DB_NAME
-env[AWS_S3_BUCKET] = ${artifact_bucket}
-env[AWS_S3_REGION] = ${aws_region}
+env[DB_HOST] = "$DB_HOST"
+env[DB_USER] = "$DB_USER"
+env[DB_PASS] = "$DB_PASS"
+env[DB_NAME] = "$DB_NAME"
+env[AWS_S3_BUCKET] = "${artifact_bucket}"
+env[AWS_S3_REGION] = "${aws_region}"
 EOF
 
 mkdir -p /var/www/html
 
 cat <<EOF > /var/www/html/.env
-DB_HOST=$DB_HOST
-DB_USER=$DB_USER
-DB_PASS=$DB_PASS
-DB_NAME=$DB_NAME
-AWS_S3_BUCKET=${artifact_bucket}
-AWS_S3_REGION=${aws_region}
+DB_HOST="$DB_HOST"
+DB_USER="$DB_USER"
+DB_PASS="$DB_PASS"
+DB_NAME="$DB_NAME"
+AWS_S3_BUCKET="${artifact_bucket}"
+AWS_S3_REGION="${aws_region}"
 EOF
 
 # Self-healing deploy: every new/replaced instance (scale-out, instance
@@ -47,12 +47,12 @@ if aws s3api head-object --bucket "${artifact_bucket}" --key "${artifact_key}" -
   unzip -o /tmp/assignment-app.zip -d /var/www/html
   # Recreate .env after unzip (unzip wipes the dir first)
   cat <<ENVEOF > /var/www/html/.env
-DB_HOST=$DB_HOST
-DB_USER=$DB_USER
-DB_PASS=$DB_PASS
-DB_NAME=$DB_NAME
-AWS_S3_BUCKET=${artifact_bucket}
-AWS_S3_REGION=${aws_region}
+DB_HOST="$DB_HOST"
+DB_USER="$DB_USER"
+DB_PASS="$DB_PASS"
+DB_NAME="$DB_NAME"
+AWS_S3_BUCKET="${artifact_bucket}"
+AWS_S3_REGION="${aws_region}"
 ENVEOF
   chown -R apache:apache /var/www/html
 else
