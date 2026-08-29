@@ -40,6 +40,7 @@ require 'partials/header.php';
 </label>
 <button type="submit">Login</button>
 </form>
+<p style="margin-top: 15px;"><a href="forgot_password.php">Forgot your password?</a></p>
 <p>Don't have an account? <a href="register.php">Register here</a></p>
 </div>
 <?php require 'partials/footer.php'; ?>

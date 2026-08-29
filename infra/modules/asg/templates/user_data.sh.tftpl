@@ -16,15 +16,6 @@ DB_USER=$(echo "$SECRET_JSON" | jq -r .username)
 DB_PASS=$(echo "$SECRET_JSON" | jq -r .password)
 DB_NAME=$(echo "$SECRET_JSON" | jq -r .dbname)
 
-# IMPORTANT: do NOT create a second file with its own "[www]" section here.
-# php-fpm's default package config already defines a pool named "www" in
-# /etc/php-fpm.d/www.conf. Two files both declaring "[www]" is a fatal
-# config error - php-fpm refuses to start, Apache is left with nothing on
-# the other end of the fastcgi socket, and every PHP request then fails at
-# the ALB as a 502 Bad Gateway (the target accepts the TCP connection but
-# never returns a valid response). Appending plain "env[...]" lines to the
-# END of the existing www.conf adds them to that same pool instead of
-# declaring a duplicate one.
 cat <<EOF >> /etc/php-fpm.d/www.conf
 env[DB_HOST] = $DB_HOST
 env[DB_USER] = $DB_USER
@@ -56,13 +47,13 @@ if aws s3api head-object --bucket "${artifact_bucket}" --key "${artifact_key}" -
   unzip -o /tmp/assignment-app.zip -d /var/www/html
   # Recreate .env after unzip (unzip wipes the dir first)
   cat <<ENVEOF > /var/www/html/.env
-DB_HOST=$DB_HOST
-DB_USER=$DB_USER
-DB_PASS=$DB_PASS
-DB_NAME=$DB_NAME
-AWS_S3_BUCKET=${artifact_bucket}
-AWS_S3_REGION=${aws_region}
-ENVEOF
+  DB_HOST=$DB_HOST
+  DB_USER=$DB_USER
+  DB_PASS=$DB_PASS
+  DB_NAME=$DB_NAME
+  AWS_S3_BUCKET=${artifact_bucket}
+  AWS_S3_REGION=${aws_region}
+  ENVEOF
   chown -R apache:apache /var/www/html
 else
   echo "<?php http_response_code(200); echo 'assignment-sport-facility-bookings: bootstrapped, waiting for first deploy.';" \
