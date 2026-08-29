@@ -153,9 +153,7 @@ require 'partials/header.php';
     $options = new chillerlan\QRCode\QROptions(['outputType' => chillerlan\QRCode\QRCode::OUTPUT_MARKUP_SVG, 'eccLevel' => chillerlan\QRCode\QRCode::ECC_L, 'svgAddXmlHeader' => false]); $qrcodeImage = (new chillerlan\QRCode\QRCode($options))->render($qrCodeUrl); ?>
     <p>1. Install Google Authenticator on your phone.</p>
     <p>2. Scan this QR code:</p>
-    <div style="max-width: 200px; margin-bottom:15px; border: 1px solid #ccc; padding: 10px; border-radius: 8px; background-color: white;">
-        <?= $qrcodeImage ?>
-    </div>
+    <img src="<?= $qrcodeImage ?>" alt="QR Code" style="max-width: 200px; margin-bottom:15px; border: 1px solid #ccc; padding: 10px; border-radius: 8px; background-color: white;">
     <p>3. Enter the 6-digit code to confirm:</p>
     <form method="post">
         <input type="hidden" name="form" value="2fa_enable">
@@ -193,6 +191,8 @@ require 'partials/header.php';
 </form>
 </div>
 <?php require 'partials/footer.php'; ?>
+
+
 
 
 
