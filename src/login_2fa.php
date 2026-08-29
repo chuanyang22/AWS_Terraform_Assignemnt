@@ -39,29 +39,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html lang=""en"">
+<html lang="en">
 <head>
-    <meta charset=""UTF-8"">
+    <meta charset="UTF-8">
     <title>Two-Factor Authentication - Sport Facility Bookings</title>
-    <link rel=""stylesheet"" href=""style.css"">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <?php include __DIR__ . '/partials/header.php'; ?>
 
-<main class=""main-content"">
-    <div class=""container"">
+<main class="main-content">
+    <div class="container">
         <h2>Two-Factor Authentication</h2>
         <?php if ($error): ?>
-            <div class=""notification error""><?= htmlspecialchars($error) ?></div>
+            <div class="notification error"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
         
         <p>Please open your Google Authenticator app and enter the 6-digit code for your account.</p>
 
-        <form method=""post"" class=""form-container"">
+        <form method="post" class="form-container">
             <label>6-Digit Code
-                <input type=""text"" name=""code"" inputmode=""numeric"" pattern=""[0-9]{6}"" required autofocus>
+                <input type="text" name="code" inputmode="numeric" pattern="[0-9]{6}" required autofocus>
             </label>
-            <button type=""submit"" class=""btn btn-primary"">Verify</button>
+            <button type="submit" class="btn btn-primary">Verify</button>
         </form>
     </div>
 </main>
