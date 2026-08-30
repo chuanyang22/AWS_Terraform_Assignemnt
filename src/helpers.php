@@ -273,7 +273,7 @@ function s3_put_object($key, $data, $contentType) {
             'Body'        => $data,
             'ContentType' => $contentType
         ]);
-        return [$result['get']('ObjectURL'), null];
+        return [$result['ObjectURL'], null];
     } catch (AwsException $e) {
         return [null, "S3 upload failed: " . $e->getAwsErrorMessage()];
     }
@@ -320,4 +320,6 @@ function s3_response_status($responseHeaders) {
     }
     return 0;
 }
+
+
 
