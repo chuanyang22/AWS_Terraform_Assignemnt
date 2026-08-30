@@ -69,7 +69,7 @@ require 'partials/header.php';
 ?>
 <div class="form-card">
 <h1>Edit Facility</h1>
-<?php if ($error): ?><p class="alert alert-error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+<?php if ($error): ?><div class="alert alert-error alert-popup"><span><?= htmlspecialchars($error) ?></span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button></div><?php endif; ?>
 <form method="post" enctype="multipart/form-data">
 <input type="hidden" name="id" value="<?= (int)$facility['id'] ?>">
 <label>Name <input type="text" name="name" value="<?= htmlspecialchars($facility['name']) ?>" required></label>
@@ -92,7 +92,7 @@ require 'partials/header.php';
 </form>
 
 <h2 style="margin-top:24px;">Courts</h2>
-<?php if ($flashError): ?><p class="alert alert-error"><?= htmlspecialchars($flashError) ?></p><?php endif; ?>
+<?php if ($flashError): ?><div class="alert alert-error alert-popup"><span><?= htmlspecialchars($flashError) ?></span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button></div><?php endif; ?>
 <table>
 <tr><th>Court</th><th>Actions</th></tr>
 <?php foreach ($courtList as $c): ?>
@@ -117,3 +117,4 @@ require 'partials/header.php';
 </div>
 </div>
 <?php require 'partials/footer.php'; ?>
+

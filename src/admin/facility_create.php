@@ -45,7 +45,7 @@ require 'partials/header.php';
 <div class="form-card">
 <h1>Add Facility</h1>
 <p class="stat-label">A facility is a sport/category (e.g. "Badminton"). You'll add its first bookable court below, and can add more courts afterwards from the Courts page.</p>
-<?php if ($error): ?><p class="alert alert-error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+<?php if ($error): ?><div class="alert alert-error alert-popup"><span><?= htmlspecialchars($error) ?></span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button></div><?php endif; ?>
 <form method="post" enctype="multipart/form-data">
 <label>Name <input type="text" name="name" placeholder="e.g. Badminton" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" required></label>
 <label>Location <input type="text" name="location" value="<?= htmlspecialchars($_POST['location'] ?? '') ?>" required></label>
@@ -62,3 +62,4 @@ require 'partials/header.php';
 </div>
 </div>
 <?php require 'partials/footer.php'; ?>
+

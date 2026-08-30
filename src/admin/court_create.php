@@ -37,7 +37,7 @@ require 'partials/header.php';
 <div class="form-card">
 <h1>Add Court</h1>
 <p class="stat-label">Facility: <?= htmlspecialchars($facility['name']) ?></p>
-<?php if ($error): ?><p class="alert alert-error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+<?php if ($error): ?><div class="alert alert-error alert-popup"><span><?= htmlspecialchars($error) ?></span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button></div><?php endif; ?>
 <form method="post">
 <input type="hidden" name="facility_id" value="<?= (int)$facility_id ?>">
 <label>Court Name <input type="text" name="name" placeholder="e.g. Court 3, Lane 5" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" required></label>
@@ -48,3 +48,4 @@ require 'partials/header.php';
 </div>
 </div>
 <?php require 'partials/footer.php'; ?>
+

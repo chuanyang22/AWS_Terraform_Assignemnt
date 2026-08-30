@@ -15,7 +15,7 @@ require 'partials/header.php';
 <h1>Users</h1>
 <p>Grant or revoke admin access, or remove an account.</p>
 <p><a class="btn btn-small" href="user_create.php">+ Add Admin</a></p>
-<?php if ($flashError): ?><p class="alert alert-error"><?= htmlspecialchars($flashError) ?></p><?php endif; ?>
+<?php if ($flashError): ?><div class="alert alert-error alert-popup"><span><?= htmlspecialchars($flashError) ?></span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button></div><?php endif; ?>
 <table>
 <tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr>
 <?php foreach ($users as $u): ?>
@@ -42,3 +42,4 @@ require 'partials/header.php';
 <?php endforeach; ?>
 </table>
 <?php require 'partials/footer.php'; ?>
+

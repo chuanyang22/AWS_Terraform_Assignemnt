@@ -80,5 +80,17 @@ function googleTranslateElementInit() {
 }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var popups = document.querySelectorAll('.alert-popup');
+    popups.forEach(function(popup) {
+        setTimeout(function() {
+            popup.classList.add('fade-out');
+            setTimeout(function() { popup.remove(); }, 500);
+        }, 10000);
+    });
+});
+</script>
 </body>
 </html>
+

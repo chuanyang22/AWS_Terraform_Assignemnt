@@ -21,7 +21,7 @@ require 'partials/header.php';
 <a class="btn btn-small" href="facility_create.php">+ Add Facility</a>
 </div>
 </div>
-<?php if ($flashError): ?><p class="alert alert-error"><?= htmlspecialchars($flashError) ?></p><?php endif; ?>
+<?php if ($flashError): ?><div class="alert alert-error alert-popup"><span><?= htmlspecialchars($flashError) ?></span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button></div><?php endif; ?>
 <table>
 <tr><th>Photo</th><th>Name</th><th>Location</th><th>Capacity</th><th>Actions</th></tr>
 <?php while ($f = $facilities->fetch_assoc()): ?>
@@ -41,3 +41,4 @@ require 'partials/header.php';
 <?php endwhile; ?>
 </table>
 <?php require 'partials/footer.php'; ?>
+

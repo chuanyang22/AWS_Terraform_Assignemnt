@@ -43,7 +43,7 @@ require 'partials/header.php';
 <div class="form-card">
 <h1>Edit Court</h1>
 <p class="stat-label">Facility: <?= htmlspecialchars($court['facility_name']) ?></p>
-<?php if ($error): ?><p class="alert alert-error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+<?php if ($error): ?><div class="alert alert-error alert-popup"><span><?= htmlspecialchars($error) ?></span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button></div><?php endif; ?>
 <form method="post">
 <input type="hidden" name="id" value="<?= (int)$court['id'] ?>">
 <label>Court Name <input type="text" name="name" value="<?= htmlspecialchars($court['name']) ?>" required></label>
@@ -54,3 +54,4 @@ require 'partials/header.php';
 </div>
 </div>
 <?php require 'partials/footer.php'; ?>
+

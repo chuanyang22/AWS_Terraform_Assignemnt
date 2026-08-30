@@ -45,7 +45,7 @@ require 'partials/header.php';
 <h1>Add Admin</h1>
 <p>Creates a new account that already has admin access — no self-registration or
 promotion needed.</p>
-<?php if ($error): ?><p class="alert alert-error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+<?php if ($error): ?><div class="alert alert-error alert-popup"><span><?= htmlspecialchars($error) ?></span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button></div><?php endif; ?>
 <form method="post">
 <label>Full Name <input type="text" name="name" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" required></label>
 <label>Email <input type="email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required></label>
@@ -66,3 +66,4 @@ promotion needed.</p>
 <p><a class="btn btn-secondary btn-small" href="users.php">Back to users</a></p>
 </div>
 <?php require 'partials/footer.php'; ?>
+

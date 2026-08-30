@@ -125,7 +125,7 @@ require 'partials/header.php';
 <h1>Court Closures</h1>
 <p>Mark a specific court closed for maintenance, for a time slot or the whole day.</p>
 </div>
-<?php if ($error): ?><p class="alert alert-error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+<?php if ($error): ?><div class="alert alert-error alert-popup"><span><?= htmlspecialchars($error) ?></span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button></div><?php endif; ?>
 
 <?php if ($pendingClosure): ?>
 <div class="form-card">
@@ -212,3 +212,4 @@ This cannot be undone.
 </table>
 <?php endif; ?>
 <?php require 'partials/footer.php'; ?>
+
