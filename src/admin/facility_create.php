@@ -17,14 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $first_court   = trim($_POST['first_court']);
 
     [$image_url, $uploadError] = handle_facility_image_upload($_FILES['image'] ?? null, $uploadDir, 'facility');
+    [$layout_url, $layoutError] = handle_facility_image_upload($_FILES['layout'] ?? null, $uploadDir, 'layout');
 
     if ($name === '' || $location === '' || $capacity < 1 || $first_court === '') {
         $error = 'Name, location, capacity and the first court name are all required.';
     } elseif ($uploadError) {
         $error = $uploadError;
+    } elseif ($layoutError) {
+        $error = $layoutError;
     } else {
-        $stmt = $conn->prepare('INSERT INTO facilities (name, location, capacity, description, materials, rules, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)');
-        $stmt->bind_param('ssissss', $name, $location, $capacity, $description, $materials, $rules, $image_url);
+        $stmt = $conn->prepare('INSERT INTO facilities (name, location, capacity, description, materials, rules, image_url, layout_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt->bind_param('ssisssss', $name, $location, $capacity, $description, $materials, $rules, $image_url, $layout_url);
         $stmt->execute();
         $facility_id = $stmt->insert_id;
         $stmt->close();
@@ -52,6 +55,7 @@ require 'partials/header.php';
 <label>Capacity (players per booked session) <input type="number" name="capacity" min="1" value="<?= htmlspecialchars($_POST['capacity'] ?? '1') ?>" required></label>
 <label>First Court Name <input type="text" name="first_court" placeholder="e.g. Court 1" value="<?= htmlspecialchars($_POST['first_court'] ?? '') ?>" required></label>
 <label>Photo <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp"></label>
+<label>Layout Diagram <input type="file" name="layout" accept="image/jpeg,image/png,image/gif,image/webp"></label>
 <label>Description <textarea name="description" rows="3" placeholder="Shown on the public Facilities page"><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea></label>
 <label>Construction &amp; Materials <textarea name="materials" rows="3" placeholder="Flooring, fixtures, build details..."><?= htmlspecialchars($_POST['materials'] ?? '') ?></textarea></label>
 <label>House Rules (one per line) <textarea name="rules" rows="4" placeholder="One rule per line"><?= htmlspecialchars($_POST['rules'] ?? '') ?></textarea></label>
@@ -62,4 +66,5 @@ require 'partials/header.php';
 </div>
 </div>
 <?php require 'partials/footer.php'; ?>
+
 
