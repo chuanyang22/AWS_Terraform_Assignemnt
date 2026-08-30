@@ -71,20 +71,27 @@ date_default_timezone_set('Asia/Kuala_Lumpur');
  * @return string
  */
 function app_env(string $key, string $default = ''): string {
+    $val = '';
     if (!empty($_SERVER[$key])) {
-        return (string)$_SERVER[$key];
+        $val = (string)$_SERVER[$key];
+    } elseif (!empty($_ENV[$key])) {
+        $val = (string)$_ENV[$key];
+    } else {
+        $envVal = getenv($key);
+        if ($envVal !== false && $envVal !== '') {
+            $val = (string)$envVal;
+        } elseif (!empty($_SERVER['REDIRECT_' . $key])) {
+            $val = (string)$_SERVER['REDIRECT_' . $key];
+        } else {
+            return $default;
+        }
     }
-    if (!empty($_ENV[$key])) {
-        return (string)$_ENV[$key];
+    
+    if ((str_starts_with($val, '"') && str_ends_with($val, '"')) ||
+        (str_starts_with($val, "'") && str_ends_with($val, "'"))) {
+        return substr($val, 1, -1);
     }
-    $val = getenv($key);
-    if ($val !== false && $val !== '') {
-        return (string)$val;
-    }
-    if (!empty($_SERVER['REDIRECT_' . $key])) {
-        return (string)$_SERVER['REDIRECT_' . $key];
-    }
-    return $default;
+    return $val;
 }
 
 $host   = app_env('DB_HOST', 'localhost');
@@ -122,3 +129,4 @@ define('AWS_S3_REGION', app_env('AWS_S3_REGION', 'us-east-1'));
 define('AWS_ACCESS_KEY_ID', app_env('AWS_ACCESS_KEY_ID', ''));
 define('AWS_SECRET_ACCESS_KEY', app_env('AWS_SECRET_ACCESS_KEY', ''));
 define('AWS_SESSION_TOKEN', app_env('AWS_SESSION_TOKEN', ''));
+
