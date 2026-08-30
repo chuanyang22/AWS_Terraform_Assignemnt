@@ -1149,7 +1149,7 @@ a { color: var(--accent); }
     border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
 }
 
 /* Sidebar Toggle Buttons */
@@ -1338,3 +1338,10 @@ a { color: var(--accent); }
     }
 }
 
+
+#sidebar-toggle-inside svg {
+    transition: transform 0.3s ease;
+}
+.sidebar.collapsed #sidebar-toggle-inside svg {
+    transform: rotate(180deg);
+}

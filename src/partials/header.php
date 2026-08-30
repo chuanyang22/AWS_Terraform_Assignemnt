@@ -29,7 +29,7 @@ function nav_active($page, $current) {
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-top">
             <button id="sidebar-toggle-inside" class="sidebar-toggle-btn" aria-label="Toggle Sidebar">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
         </div>
         <nav class="sidebar-nav">
@@ -64,9 +64,10 @@ function nav_active($page, $current) {
                     <img src="assets/tarumt-logo.png" alt="TAR UMT" class="brand-logo">
                     <span class="topbar-brand-text">Sports Booking</span>
                 </a>
-                <div id="google_translate_element" style="display:inline-block; margin-left: 15px; vertical-align: middle;"></div>
+                
             </div>
             <div class="topbar-right">
+                <div id="google_translate_element" style="display:inline-block; margin-right: 15px; vertical-align: middle;"></div>
                 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">&#9728;</button>
                 <?php if ($loggedIn): ?>
                 <div class="user-menu">
@@ -86,5 +87,7 @@ function nav_active($page, $current) {
             </div>
         </header>
         <main class="container">
+
+
 
 
