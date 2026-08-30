@@ -76,6 +76,9 @@ function nav_active($page, $current) {
                         <span class="user-name">Hi, <?= htmlspecialchars(current_user_name()) ?></span>
                     </button>
                     <div class="user-menu-dropdown">
+                        <?php if (current_user_is_admin()): ?>
+                        <a href="admin/bookings.php">Admin Dashboard</a>
+                        <?php endif; ?>
                         <a href="account.php">My Account</a>
                         <a href="logout.php">Logout</a>
                     </div>
@@ -87,6 +90,7 @@ function nav_active($page, $current) {
             </div>
         </header>
         <main class="container">
+
 
 
 
