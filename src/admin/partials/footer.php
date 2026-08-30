@@ -89,8 +89,35 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() { popup.remove(); }, 500);
         }, 10000);
     });
+    document.querySelectorAll('form[action$="_delete.php"]').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            if (e.defaultPrevented) return;
+            e.preventDefault();
+            var row = this.closest('tr');
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: { 'Accept': 'application/json' }
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    if (row) row.remove();
+                } else {
+                    var popup = document.createElement('div');
+                    popup.className = 'alert alert-error alert-popup';
+                    popup.innerHTML = '<span>' + data.error + '</span><button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>';
+                    document.body.appendChild(popup);
+                    setTimeout(function() {
+                        popup.classList.add('fade-out');
+                        setTimeout(function() { popup.remove(); }, 500);
+                    }, 10000);
+                }
+            }).catch(err => console.error(err));
+        });
+    });
 });
 </script>
 </body>
 </html>
+
+
 

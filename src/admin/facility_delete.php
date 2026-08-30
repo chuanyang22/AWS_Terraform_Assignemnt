@@ -25,5 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 }
 
+if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+    header('Content-Type: application/json');
+    if (isset($_SESSION['flash_error'])) {
+        $err = $_SESSION['flash_error'];
+        unset($_SESSION['flash_error']);
+        echo json_encode(['success' => false, 'error' => $err]);
+    } else {
+        echo json_encode(['success' => true]);
+    }
+    exit;
+}
+
 header('Location: facilities.php');
 exit;
