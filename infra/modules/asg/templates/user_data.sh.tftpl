@@ -64,7 +64,9 @@ else
     > /var/www/html/healthz.php
 fi
 
+echo -e "upload_max_filesize = 12M\npost_max_size = 12M" | sudo tee /etc/php.d/99-uploads.ini > /dev/null
 systemctl enable php-fpm || true
 systemctl restart php-fpm || true
 systemctl enable httpd
 systemctl restart httpd
+

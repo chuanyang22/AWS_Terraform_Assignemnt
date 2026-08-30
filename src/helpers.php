@@ -68,8 +68,8 @@ function handle_facility_image_upload($file, $uploadDir, $prefix = 'facility') {
     if ($file['error'] !== UPLOAD_ERR_OK) {
         return [null, 'Image upload failed. Please try again.'];
     }
-    if ($file['size'] > 5 * 1024 * 1024) {
-        return [null, 'Image must be smaller than 5MB.'];
+    if ($file['size'] > 12 * 1024 * 1024) {
+        return [null, 'Image must be smaller than 12MB.'];
     }
 
     // Check the actual file content, not just the extension/MIME the
@@ -320,3 +320,4 @@ function s3_response_status($responseHeaders) {
     }
     return 0;
 }
+

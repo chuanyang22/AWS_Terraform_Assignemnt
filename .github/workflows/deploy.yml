@@ -168,6 +168,8 @@ jobs:
               "S3_BUCKET=$(grep -oP \"(?<=env\\[AWS_S3_BUCKET\\] = ).*\" /etc/php-fpm.d/www.conf | tail -1 | tr -d \"\\r\")",
               "S3_REGION=$(grep -oP \"(?<=env\\[AWS_S3_REGION\\] = ).*\" /etc/php-fpm.d/www.conf | tail -1 | tr -d \"\\r\")",
               "printf 'DB_HOST=%s\\nDB_USER=%s\\nDB_PASS=%s\\nDB_NAME=%s\\nAWS_S3_BUCKET=%s\\nAWS_S3_REGION=%s\\n' \"$DB_HOST\" \"$DB_USER\" \"$DB_PASS\" \"$DB_NAME\" \"$S3_BUCKET\" \"$S3_REGION\" | sudo tee /var/www/html/.env > /dev/null",
+              "echo 'upload_max_filesize = 12M' | sudo tee /etc/php.d/99-uploads.ini > /dev/null",
+              "echo 'post_max_size = 12M' | sudo tee -a /etc/php.d/99-uploads.ini > /dev/null",
               "sudo systemctl restart php-fpm || true",
               "sudo systemctl restart httpd"
             ]}' \
