@@ -27,10 +27,11 @@ function nav_active($page, $current) {
 
 <div class="layout-wrapper">
     <aside class="sidebar" id="sidebar">
-        <a class="sidebar-brand" href="index.php">
-            <img src="assets/tarumt-logo.png" alt="TAR UMT" class="brand-logo">
-            <span class="sidebar-brand-text">Sports Booking</span>
-        </a>
+        <div class="sidebar-top">
+            <button id="sidebar-toggle-inside" class="sidebar-toggle-btn" aria-label="Toggle Sidebar">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            </button>
+        </div>
         <nav class="sidebar-nav">
             <a href="index.php" class="<?= trim(nav_active('index.php', $currentPage)) ?>">
                 <span class="sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span class="sidebar-text">Home</span>
@@ -56,9 +57,13 @@ function nav_active($page, $current) {
     <div class="main-content">
         <header class="topbar">
             <div class="topbar-left">
-                <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle Sidebar">
+                <button id="sidebar-toggle-outside" class="sidebar-toggle-btn mobile-only" aria-label="Toggle Sidebar">
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
                 </button>
+                <a class="topbar-brand" href="index.php">
+                    <img src="assets/tarumt-logo.png" alt="TAR UMT" class="brand-logo">
+                    <span class="topbar-brand-text">Sports Booking</span>
+                </a>
                 <div id="google_translate_element" style="display:inline-block; margin-left: 15px; vertical-align: middle;"></div>
             </div>
             <div class="topbar-right">
@@ -81,4 +86,5 @@ function nav_active($page, $current) {
             </div>
         </header>
         <main class="container">
+
 

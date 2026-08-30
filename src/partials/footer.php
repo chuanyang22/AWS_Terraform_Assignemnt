@@ -129,8 +129,9 @@ function googleTranslateElementInit() {
 <script>
 (function () {
     var sidebar = document.getElementById('sidebar');
-    var toggleBtn = document.getElementById('sidebar-toggle');
-    if (!sidebar || !toggleBtn) return;
+    var toggleBtnIn = document.getElementById('sidebar-toggle-inside');
+    var toggleBtnOut = document.getElementById('sidebar-toggle-outside');
+    if (!sidebar) return;
 
     var savedState = localStorage.getItem('sidebar_collapsed');
     if (savedState === 'true' && window.innerWidth > 768) {
@@ -139,13 +140,17 @@ function googleTranslateElementInit() {
         sidebar.classList.add('collapsed');
     }
 
-    toggleBtn.addEventListener('click', function () {
+    function toggle() {
         sidebar.classList.toggle('collapsed');
         var isCollapsed = sidebar.classList.contains('collapsed');
         localStorage.setItem('sidebar_collapsed', isCollapsed ? 'true' : 'false');
-    });
+    }
+
+    if (toggleBtnIn) toggleBtnIn.addEventListener('click', toggle);
+    if (toggleBtnOut) toggleBtnOut.addEventListener('click', toggle);
 })();
 </script>
 </body>
 </html>
+
 
