@@ -224,7 +224,7 @@ section { margin-bottom: 40px; }
 /* Cards */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin-bottom: 8px;
 }
@@ -1312,4 +1312,8 @@ a { color: var(--accent); }
         width: auto;
     }
 }
+
+
+
+@media (max-width: 640px) { .card-grid { grid-template-columns: 1fr; } }
 

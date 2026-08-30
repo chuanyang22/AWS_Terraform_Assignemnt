@@ -53,18 +53,20 @@ require 'partials/header.php';
 </div>
 <?php endforeach; ?>
 
-<div class="page-header">
-<h1>Campus Sports Facility Booking</h1>
-<p>Reserve badminton courts, futsal courts and more in a few clicks.</p>
+<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+    <div class="dashboard-title">
+        <h1 style="margin: 0; font-size: 1.8rem;">Campus Sports Facility Booking</h1>
+        <p style="margin: 4px 0 0; color: var(--text-secondary);">Reserve badminton courts, futsal courts and more in a few clicks.</p>
+    </div>
+    <form method="get" class="filter-bar" id="facility-filter-form" style="margin: 0;">
+        <label>Search <input type="text" name="q" id="facility-search" placeholder="Facility name..." value="<?= htmlspecialchars($search) ?>" autocomplete="off"></label>
+        <button type="submit">Search</button>
+        <?php if ($search !== ''): ?><a class="btn btn-secondary" href="index.php#facilities">Clear</a><?php endif; ?>
+    </form>
 </div>
 
 <section>
-<h2 id="facilities">Available Facilities</h2>
-<form method="get" class="filter-bar" id="facility-filter-form">
-<label>Search <input type="text" name="q" id="facility-search" placeholder="Facility name..." value="<?= htmlspecialchars($search) ?>" autocomplete="off"></label>
-<button type="submit">Search</button>
-<?php if ($search !== ''): ?><a class="btn btn-secondary" href="index.php#facilities">Clear</a><?php endif; ?>
-</form>
+<h2 id="facilities" style="display: none;">Available Facilities</h2>
 <script>
 (function () {
     var input = document.getElementById('facility-search');
@@ -142,3 +144,4 @@ require 'partials/header.php';
 <?php endif; ?>
 </section>
 <?php require 'partials/footer.php'; ?>
+
