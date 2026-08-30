@@ -171,7 +171,10 @@ jobs:
               "echo \"upload_max_filesize = 12M\" | sudo tee /etc/php.d/99-uploads.ini > /dev/null",
               "echo \"post_max_size = 12M\" | sudo tee -a /etc/php.d/99-uploads.ini > /dev/null",
               "sudo systemctl restart php-fpm || true",
-              "sudo systemctl restart httpd"
+              "sudo systemctl restart httpd",
+              "sudo cp /var/log/httpd/error_log /var/www/html/error_log.txt || true",
+              "sudo cp /var/log/php-fpm/www-error.log /var/www/html/php_error.txt || true",
+              "sudo chmod 644 /var/www/html/*.txt"
             ]}' \
             --query "Command.CommandId" --output text)
 
@@ -218,4 +221,5 @@ jobs:
             echo "SSM deployment failed on one or more instances."
             exit 1
           fi
+
 
