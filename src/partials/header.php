@@ -62,7 +62,7 @@ function nav_active($page, $current) {
                 </button>
                 <a class="topbar-brand" href="index.php">
                     <img src="assets/tarumt-logo.png" alt="TAR UMT" class="brand-logo">
-                    <span class="topbar-brand-text">Sports Booking</span>
+                    <span class="topbar-brand-text">Sports Facility Booking</span>
                 </a>
                 
             </div>
@@ -87,6 +87,7 @@ function nav_active($page, $current) {
             </div>
         </header>
         <main class="container">
+
 
 
 
