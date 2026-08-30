@@ -1,0 +1,20 @@
+name: Promote User to Admin
+on:
+  workflow_dispatch: {}
+env:
+  APP_TAG: sport-facility-bookings
+permissions:
+  contents: read
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+      - name: Run SQL via SSM
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:App,Values=${{ env.APP_TAG }}" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].InstanceId" --output text)
+          COMMAND_ID=$(aws ssm send-command --document-name "AWS-RunShellScript" --instance-ids "$INSTANCE_ID" --parameters '{"commands":["export $(cat /var/www/html/.env | xargs) && mysql -h $DB_HOST -u $DB_USER -p$DB_PASS $DB_NAME -e \"UPDATE users SET is_admin = 1 WHERE email = '"'"'tiesw-wm25@student.tarc.edu.my'"'"';\""]}' --query "Command.CommandId" --output text)
+          echo "Dispatched command $COMMAND_ID to instance $INSTANCE_ID"
