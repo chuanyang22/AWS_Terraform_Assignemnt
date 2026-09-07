@@ -43,7 +43,7 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_eip" "nat" {
-  vpc    = true
+  domain = "vpc"
 
   tags = {
     Name = "${var.name_prefix}-nat-eip"
@@ -112,4 +112,3 @@ resource "aws_vpc_endpoint" "s3" {
     Name = "${var.name_prefix}-s3-endpoint"
   }
 }
-
