@@ -67,6 +67,14 @@ jobs:
         run: |
           terraform init -input=false
           terraform untaint module.s3.aws_s3_bucket.uploads || true
+          
+          BUCKET_NAME=$(terraform state show module.s3.aws_s3_bucket.uploads 2>/dev/null | grep '^[[:space:]]*bucket[[:space:]]*=' | awk '{print $3}' | tr -d '"') || true
+          if [ -n "$BUCKET_NAME" ]; then
+            if ! aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
+              echo "Bucket $BUCKET_NAME missing in AWS! Removing from state..."
+              terraform state rm module.s3.aws_s3_bucket.uploads || true
+            fi
+          fi
           terraform apply -auto-approve -refresh=false
           echo "ARTIFACT_BUCKET=$(terraform output -raw s3_bucket_name)" >> "$GITHUB_ENV"
           echo "ASG_NAME=$(terraform output -raw asg_name)" >> "$GITHUB_ENV"
@@ -222,6 +230,7 @@ jobs:
             echo "SSM deployment failed on one or more instances."
             exit 1
           fi
+
 
 
 

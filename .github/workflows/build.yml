@@ -73,6 +73,14 @@ jobs:
         run: |
           terraform init
           terraform untaint module.s3.aws_s3_bucket.uploads || true
+          
+          BUCKET_NAME=$(terraform state show module.s3.aws_s3_bucket.uploads 2>/dev/null | grep '^[[:space:]]*bucket[[:space:]]*=' | awk '{print $3}' | tr -d '"') || true
+          if [ -n "$BUCKET_NAME" ]; then
+            if ! aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
+              echo "Bucket $BUCKET_NAME missing in AWS! Removing from state..."
+              terraform state rm module.s3.aws_s3_bucket.uploads || true
+            fi
+          fi
 
       - name: Terraform validate
         run: terraform validate
@@ -95,4 +103,5 @@ jobs:
       - name: Terraform destroy
         if: ${{ inputs.action == 'destroy' }}
         run: terraform destroy -auto-approve -refresh=false
+
 
