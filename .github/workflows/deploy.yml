@@ -66,6 +66,7 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
           terraform init -input=false
+          terraform untaint module.s3.aws_s3_bucket.uploads || true
           terraform apply -auto-approve -refresh=false
           echo "ARTIFACT_BUCKET=$(terraform output -raw s3_bucket_name)" >> "$GITHUB_ENV"
           echo "ASG_NAME=$(terraform output -raw asg_name)" >> "$GITHUB_ENV"
@@ -221,6 +222,7 @@ jobs:
             echo "SSM deployment failed on one or more instances."
             exit 1
           fi
+
 
 
 
