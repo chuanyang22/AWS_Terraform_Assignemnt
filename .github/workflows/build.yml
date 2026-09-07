@@ -75,13 +75,13 @@ jobs:
       - name: Terraform validate
         run: terraform validate
 
-      - name: Terraform plan
+      - name: terraform plan -refresh=false
         if: ${{ inputs.action == 'plan' }}
-        run: terraform plan
+        run: terraform plan -refresh=false
 
       - name: Terraform apply
         if: ${{ inputs.action == 'apply' }}
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -refresh=false
 
       - name: Capture Terraform outputs
         id: tf_output
@@ -92,4 +92,4 @@ jobs:
 
       - name: Terraform destroy
         if: ${{ inputs.action == 'destroy' }}
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve -refresh=false
