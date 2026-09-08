@@ -66,6 +66,7 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
           terraform init -input=false
+          terraform state rm module.s3.aws_s3_bucket.uploads || true
           
           
           terraform apply -auto-approve
@@ -223,6 +224,7 @@ jobs:
             echo "SSM deployment failed on one or more instances."
             exit 1
           fi
+
 
 
 

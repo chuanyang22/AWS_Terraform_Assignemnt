@@ -72,6 +72,7 @@ jobs:
       - name: Terraform init
         run: |
           terraform init
+          terraform state rm module.s3.aws_s3_bucket.uploads || true
           
           
 
@@ -96,6 +97,7 @@ jobs:
       - name: Terraform destroy
         if: ${{ inputs.action == 'destroy' }}
         run: terraform destroy -auto-approve
+
 
 
 
