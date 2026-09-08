@@ -1,22 +1,29 @@
-# assignment-s3-uploads: holds event photo uploads. Bucket ACLs stay blocked;
-# only unauthenticated GetObject under uploads/* is allowed via bucket policy so
-# images render in the browser, without allowing public listing or writes.
-resource "aws_s3_bucket" "uploads" {
-  bucket = "${var.name_prefix}-s3-uploads"
+locals {
+  bucket_name = "${var.name_prefix}-s3-uploads"
+}
 
-  # Sandbox environment: by the time you `terraform destroy`, this bucket will
-  # contain uploaded event images, deploy.yml release artifacts, and
-  # db-init.yml's schema.sql/seed-db.sh. AWS refuses to delete a non-empty
-  # bucket, so without force_destroy the destroy would fail on this resource.
-  force_destroy = true
+resource "terraform_data" "uploads" {
+  input = local.bucket_name
 
-  tags = {
-    Name = "${var.name_prefix}-s3-uploads"
+  provisioner "local-exec" {
+    command = <<-EOT
+      aws s3api create-bucket --bucket "${self.input}" --region us-east-1 || true
+      aws s3api put-bucket-tagging --bucket "${self.input}" --tagging "TagSet=[{Key=Name,Value=${self.input}}]"
+    EOT
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<-EOT
+      aws s3 rm "s3://${self.input}" --recursive || true
+      aws s3api delete-bucket --bucket "${self.input}" --region us-east-1 || true
+    EOT
   }
 }
 
 resource "aws_s3_bucket_public_access_block" "uploads" {
-  bucket = aws_s3_bucket.uploads.id
+  bucket = local.bucket_name
+  depends_on = [terraform_data.uploads]
 
   block_public_acls       = true
   ignore_public_acls      = true
@@ -25,7 +32,7 @@ resource "aws_s3_bucket_public_access_block" "uploads" {
 }
 
 resource "aws_s3_bucket_policy" "public_read" {
-  bucket = aws_s3_bucket.uploads.id
+  bucket = local.bucket_name
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -34,16 +41,17 @@ resource "aws_s3_bucket_policy" "public_read" {
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.uploads.arn}/${var.public_read_prefix}"
+        Resource  = "arn:aws:s3:::${local.bucket_name}/${var.public_read_prefix}"
       }
     ]
   })
 
-  depends_on = [aws_s3_bucket_public_access_block.uploads]
+  depends_on = [terraform_data.uploads, aws_s3_bucket_public_access_block.uploads]
 }
 
 resource "aws_s3_bucket_cors_configuration" "uploads" {
-  bucket = aws_s3_bucket.uploads.id
+  bucket = local.bucket_name
+  depends_on = [terraform_data.uploads]
 
   cors_rule {
     allowed_headers = ["*"]
@@ -52,3 +60,4 @@ resource "aws_s3_bucket_cors_configuration" "uploads" {
     max_age_seconds = 3000
   }
 }
+

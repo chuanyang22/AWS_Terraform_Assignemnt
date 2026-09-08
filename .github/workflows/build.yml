@@ -72,20 +72,19 @@ jobs:
       - name: Terraform init
         run: |
           terraform init
-          terraform untaint module.s3.aws_s3_bucket.uploads || true
           
           
 
       - name: Terraform validate
         run: terraform validate
 
-      - name: terraform plan -refresh=false
+      - name: terraform plan
         if: ${{ inputs.action == 'plan' }}
-        run: terraform plan -refresh=false
+        run: terraform plan
 
       - name: Terraform apply
         if: ${{ inputs.action == 'apply' }}
-        run: terraform apply -auto-approve -refresh=false
+        run: terraform apply -auto-approve
 
       - name: Capture Terraform outputs
         id: tf_output
@@ -96,7 +95,9 @@ jobs:
 
       - name: Terraform destroy
         if: ${{ inputs.action == 'destroy' }}
-        run: terraform destroy -auto-approve -refresh=false
+        run: terraform destroy -auto-approve
+
+
 
 
 
