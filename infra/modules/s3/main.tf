@@ -31,6 +31,11 @@ resource "aws_s3_bucket_public_access_block" "uploads" {
   restrict_public_buckets = false
 }
 
+resource "time_sleep" "wait_for_public_access_block" {
+  depends_on = [aws_s3_bucket_public_access_block.uploads]
+  create_duration = "30s"
+}
+
 resource "aws_s3_bucket_policy" "public_read" {
   bucket = local.bucket_name
   policy = jsonencode({
@@ -46,7 +51,7 @@ resource "aws_s3_bucket_policy" "public_read" {
     ]
   })
 
-  depends_on = [terraform_data.uploads, aws_s3_bucket_public_access_block.uploads]
+  depends_on = [terraform_data.uploads, time_sleep.wait_for_public_access_block]
 }
 
 resource "aws_s3_bucket_cors_configuration" "uploads" {
