@@ -55,7 +55,7 @@ resource "aws_launch_template" "app" {
 }
 
 resource "aws_autoscaling_group" "app" {
-  name = "${var.name_prefix}-asg"
+  name_prefix = "${var.name_prefix}-asg-"
 
   vpc_zone_identifier = var.subnet_ids
   min_size            = var.min_size
@@ -74,11 +74,9 @@ resource "aws_autoscaling_group" "app" {
     version = aws_launch_template.app.latest_version
   }
 
-  instance_refresh {
-    strategy = "Rolling"
-    preferences {
-      min_healthy_percentage = 50
-    }
+  lifecycle {
+    create_before_destroy = true
+    replace_triggered_by  = [aws_launch_template.app]
   }
 
   tag {
