@@ -37,8 +37,8 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   namespace           = "AWS/EC2"
   period              = 60
   statistic           = "Average"
-  threshold           = 75
-  alarm_description   = "ASG average CPU above 75% for 3 consecutive minutes."
+  threshold           = 85
+  alarm_description   = "ASG average CPU above 85% for 3 consecutive minutes."
   alarm_actions       = [aws_sns_topic.alerts.arn]
   ok_actions          = [aws_sns_topic.alerts.arn]
 
