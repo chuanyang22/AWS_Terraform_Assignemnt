@@ -1,4 +1,7 @@
 </main>
+    </div>
+</div>
+
 <footer class="footer">
 <p>&copy; <?= date('Y') ?> Campus Sports Facility Booking &middot; Admin Panel</p>
 </footer>
@@ -6,6 +9,26 @@
 <button type="button" class="lightbox-close" aria-label="Close">&times;</button>
 <img id="lightbox-img" src="" alt="">
 </div>
+<script>
+(function() {
+    var sidebar = document.getElementById('sidebar');
+    var toggleInside = document.getElementById('sidebar-toggle-inside');
+    var toggleOutside = document.getElementById('sidebar-toggle-outside');
+    
+    function toggleSidebar() {
+        sidebar.classList.toggle('collapsed');
+        var isCollapsed = sidebar.classList.contains('collapsed');
+        localStorage.setItem('sidebarCollapsed', isCollapsed ? 'true' : 'false');
+    }
+
+    if (toggleInside) toggleInside.addEventListener('click', toggleSidebar);
+    if (toggleOutside) toggleOutside.addEventListener('click', toggleSidebar);
+
+    if (localStorage.getItem('sidebarCollapsed') === 'true' && window.innerWidth > 768) {
+        sidebar.classList.add('collapsed');
+    }
+})();
+</script>
 <script>
 (function () {
     var btn = document.getElementById('theme-toggle');
