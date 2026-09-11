@@ -90,6 +90,12 @@ variable "asg_desired_capacity" {
   default = 1
 }
 
+variable "asg_cpu_target_value" {
+  description = "Target average CPU utilization (%) for the scaling policy."
+  type        = number
+  default     = 75
+}
+
 variable "alert_email" {
   description = "Email address for SNS alarm notifications (CPU, unhealthy ALB targets, low RDS storage). AWS sends a confirmation link here after apply."
   type        = string

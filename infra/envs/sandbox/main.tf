@@ -82,6 +82,7 @@ module "asg" {
   min_size              = var.asg_min_size
   max_size              = var.asg_max_size
   desired_capacity      = var.asg_desired_capacity
+  cpu_target_value      = var.asg_cpu_target_value
   artifact_bucket       = module.s3.bucket_id
   artifact_key          = var.artifact_key
 }
