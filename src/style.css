@@ -1294,10 +1294,7 @@ a { color: var(--accent); }
     filter: brightness(1.1);
 }
 
-/* Hide original navbar */
-.navbar {
-    display: none !important;
-}
+
 
 /* Make user menu dark-theme friendly for topbar */
 .topbar .nav-user {
